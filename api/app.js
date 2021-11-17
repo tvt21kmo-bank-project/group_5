@@ -5,6 +5,7 @@ var logger = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 var app = express();
+const bcrypt = require('bcryptjs')
 
 app.use(helmet());
 app.use(cors());
@@ -26,7 +27,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var asiakasRouter = require('./routes/asiakas');
 var tiliRouter = require('./routes/tili');
-
+var korttiRouter = require('./routes/kortti');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -38,6 +39,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/asiakas', asiakasRouter);
 app.use('/tili', tiliRouter);
+app.use('/kortti', korttiRouter);
 
 module.exports = app;
 
