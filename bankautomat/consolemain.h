@@ -22,6 +22,7 @@ private slots:
     void on_btnNosto_clicked();
     void timerSlot();
     void slotClose();
+    void on_btnSulje_clicked();
 
 signals:
     void closeWindow();

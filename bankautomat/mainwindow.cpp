@@ -12,20 +12,19 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete objConMain;
-    objConMain = nullptr;
+    delete objConPass;
+    objConPass = nullptr;
 }
 
 
 void MainWindow::on_btnKirjaudu_clicked()
 {
     emit signalKirjaudu();
-    //objConMain->show();
 }
 
 void MainWindow::loginSlot()
 {
-    objConMain->show();
+    objConPass->show();
     //this->close();
 }
 

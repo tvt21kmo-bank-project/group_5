@@ -46,3 +46,9 @@ void consoleMain::slotClose()
     objConNosto->close();
 }
 
+
+void consoleMain::on_btnSulje_clicked()
+{
+    this->close();
+}
+

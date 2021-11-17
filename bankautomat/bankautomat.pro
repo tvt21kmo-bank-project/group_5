@@ -11,17 +11,20 @@ CONFIG += c++11
 SOURCES += \
     consolemain.cpp \
     consolenosto.cpp \
+    consolepassword.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     consolemain.h \
     consolenosto.h \
+    consolepassword.h \
     mainwindow.h
 
 FORMS += \
     consolemain.ui \
     consolenosto.ui \
+    consolepassword.ui \
     mainwindow.ui
 
 # Default rules for deployment.
