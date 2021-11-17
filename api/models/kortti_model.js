@@ -13,8 +13,7 @@ const kortti = {
   add: function(kortti, callback) {
 
     bcrypt.hash(kortti.pinkoodi,10,function(err,hash){
-    return db.query(
-      'insert into kortti (idkortti,pinkoodi,tili_idtili,asiakas_idasiakas) values(?,?,?,?)',
+    return db.query('insert into kortti (idkortti,pinkoodi,tili_idtili,asiakas_idasiakas) values(?,?,?,?)',
       [kortti.idkortti,hash,kortti.tili_idtili,kortti.asiakas_idasiakas],
       callback
     );});
