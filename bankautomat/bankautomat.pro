@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -9,13 +9,22 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    consolemain.cpp \
+    consolenosto.cpp \
+    consolepassword.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    consolemain.h \
+    consolenosto.h \
+    consolepassword.h \
     mainwindow.h
 
 FORMS += \
+    consolemain.ui \
+    consolenosto.ui \
+    consolepassword.ui \
     mainwindow.ui
 
 # Default rules for deployment.
