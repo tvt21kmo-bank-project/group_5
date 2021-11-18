@@ -22,7 +22,31 @@ signals:
 private slots:
     void loginSlot();
 
-    void on_btnKirjaudu_clicked();
+    void on_btnKirjaudu_clicked(); // for testing purposes
+
+    void on_btnZero_clicked();
+
+    void on_btnOne_clicked();
+
+    void on_btnTwo_clicked();
+
+    void on_btnThree_clicked();
+
+    void on_btnFour_clicked();
+
+    void on_btnFive_clicked();
+
+    void on_btnSix_clicked();
+
+    void on_btnSeven_clicked();
+
+    void on_btnEight_clicked();
+
+    void on_btnNine_clicked();
+
+    void on_btnReset_clicked();
+
+    void on_btnOK_clicked();
 
 private:
     Ui::consolePassword *ui;
