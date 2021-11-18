@@ -27,7 +27,7 @@ router.post('/',
               );
             }
             else{
-              console.log("user does not exsist");
+              console.log("user does not exist");
               response.send(false);
             }
           }
