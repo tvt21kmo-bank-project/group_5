@@ -14,7 +14,7 @@ router.post('/',
           }
           else{
               if (dbResult.length > 0) {
-                bcrypt.compare(pincode,dbResult[0].pincode, function(err,compareResult) {
+                bcrypt.compare(pincode,dbResult[0].pinkoodi, function(err,compareResult) {
                   if(compareResult) {
                     console.log("success");
                     response.send(true);
@@ -27,7 +27,7 @@ router.post('/',
               );
             }
             else{
-              console.log("user does not exists");
+              console.log("user does not exist");
               response.send(false);
             }
           }
