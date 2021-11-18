@@ -59,7 +59,3 @@ void consoleNosto::on_btnSulje_clicked()
 {
     this->close();
 }
-
-
-
-

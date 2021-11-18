@@ -22,7 +22,7 @@ private slots:
     void on_btnNosto_clicked();
     void timerSlot();
     void slotClose();
-    void on_btnSulje_clicked();
+    void on_btnKirjauduUlos_clicked();
 
 signals:
     void closeWindow();

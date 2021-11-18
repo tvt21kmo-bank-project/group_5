@@ -47,7 +47,7 @@ void consoleMain::slotClose()
 }
 
 
-void consoleMain::on_btnSulje_clicked()
+void consoleMain::on_btnKirjauduUlos_clicked()
 {
     this->close();
 }
