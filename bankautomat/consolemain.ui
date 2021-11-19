@@ -39,7 +39,7 @@
     <string>Kirjaudu ulos</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="btnTilitapahtumat">
    <property name="geometry">
     <rect>
      <x>220</x>
@@ -52,7 +52,7 @@
     <string>Tilitapahtumat</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="btnSaldo">
    <property name="geometry">
     <rect>
      <x>400</x>
