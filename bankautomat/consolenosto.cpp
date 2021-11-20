@@ -22,43 +22,44 @@ void consoleNosto::on_btn20e_clicked()
 
 void consoleNosto::on_btn40e_clicked()
 {
-
+    counter = 0;
 }
 
 
 void consoleNosto::on_btn60e_clicked()
 {
-
+    counter = 0;
 }
 
 
 void consoleNosto::on_btn100e_clicked()
 {
-
+    counter = 0;
 }
 
 
 void consoleNosto::on_btn200e_clicked()
 {
-
+    counter = 0;
 }
 
 
 void consoleNosto::on_btn500e_clicked()
 {
-
+    counter = 0;
 }
 
 
 void consoleNosto::on_btnMuuSumma_clicked()
 {
-
+    counter = 0;
 }
 
 
 void consoleNosto::on_btnSulje_clicked()
 {
     this->close();
+    emit closeWindow();
 }
 
 void consoleNosto::timerSlot()

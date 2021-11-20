@@ -7,6 +7,8 @@ consoleMain::consoleMain(QWidget *parent) :
 {
     ui->setupUi(this);
     objTimer = new QTimer;
+    objConNosto= new consoleNosto;
+    objConTilitapahtumat = new consoleTilitapahtumat;
     counter = 0;
 }
 

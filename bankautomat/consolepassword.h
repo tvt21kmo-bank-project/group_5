@@ -50,7 +50,7 @@ private slots:
 
 private:
     Ui::consolePassword *ui;
-    consoleMain *objConMain = new consoleMain;
+    consoleMain *objConMain;
 };
 
 #endif // CONSOLEPASSWORD_H
