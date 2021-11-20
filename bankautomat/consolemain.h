@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QDebug>
 #include "consolenosto.h"
+#include "consoletilitapahtumat.h"
 
 namespace Ui {
 class consoleMain;
@@ -19,10 +20,14 @@ public:
     ~consoleMain();
 
 private slots:
-    void on_btnNosto_clicked();
+    void slotCloseNosto();
     void timerSlot();
-    void slotClose();
-    void on_btnSulje_clicked();
+    void slotCloseTilitapahtumat();
+    void on_btnNosto_clicked();
+    void on_btnTilitapahtumat_clicked();
+    void on_btnSaldo_clicked();
+    void on_btnKirjauduUlos_clicked();
+
 
 signals:
     void closeWindow();
@@ -30,8 +35,10 @@ signals:
 private:
     Ui::consoleMain *ui;
     consoleNosto *objConNosto = new consoleNosto;
+    consoleTilitapahtumat *objConTilitapahtumat = new consoleTilitapahtumat;
     QTimer *objTimer;
     int counter;
+
 };
 
 #endif // CONSOLEMAIN_H
