@@ -20,13 +20,14 @@ public:
     ~consoleMain();
 
 private slots:
-    void timerSlot();
     void slotCloseNosto();
+    void timerSlot();
     void slotCloseTilitapahtumat();
     void on_btnNosto_clicked();
     void on_btnTilitapahtumat_clicked();
     void on_btnSaldo_clicked();
     void on_btnKirjauduUlos_clicked();
+
 
 signals:
     void closeWindow();
@@ -37,6 +38,7 @@ private:
     consoleTilitapahtumat *objConTilitapahtumat = new consoleTilitapahtumat;
     QTimer *objTimer;
     int counter;
+
 };
 
 #endif // CONSOLEMAIN_H

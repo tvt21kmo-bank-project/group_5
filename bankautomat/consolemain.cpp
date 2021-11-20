@@ -7,6 +7,7 @@ consoleMain::consoleMain(QWidget *parent) :
 {
     ui->setupUi(this);
     objTimer = new QTimer;
+    counter = 0;
 }
 
 consoleMain::~consoleMain()
@@ -29,11 +30,11 @@ void consoleMain::on_btnNosto_clicked()
 {
 
     objConNosto->show();
-    //this->hide();
     counter = 0;
-    connect(objTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
-    connect(this, SIGNAL(closeWindow()), this, SLOT(slotCloseNosto()));
+    connect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
+    connect(objConNosto, SIGNAL(closeWindow()), this, SLOT(slotCloseNosto()));
     objTimer->start(1000);
+    this->hide();
 }
 
 void consoleMain::timerSlot()
@@ -41,29 +42,33 @@ void consoleMain::timerSlot()
     qDebug() << counter;
     counter++;
     if(counter == 10){
-        disconnect(objTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+        counter = 0;
         emit closeWindow();
     }
 }
 
 void consoleMain::slotCloseNosto()
 {
+    disconnect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
     objConNosto->close();
+    this->show();
 }
 
 void consoleMain::slotCloseTilitapahtumat()
 {
+    disconnect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     objConTilitapahtumat->close();
+    this->show();
 }
 
 void consoleMain::on_btnTilitapahtumat_clicked()
 {
     objConTilitapahtumat->show();
-    //this->hide();
     counter = 0;
-    connect(objTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
-    connect(this, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));
+    connect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
+    connect(objConTilitapahtumat, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));
     objTimer->start(1000);
+    this->hide();
 }
 
 
@@ -76,3 +81,5 @@ void consoleMain::on_btnKirjauduUlos_clicked()
 {
     this->close();
 }
+
+
