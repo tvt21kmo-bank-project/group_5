@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+   // connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
 }
 
 MainWindow::~MainWindow()
@@ -14,19 +14,46 @@ MainWindow::~MainWindow()
     delete ui;
     delete objConPass;
     objConPass = nullptr;
+    delete checkCardManager;
+    checkCardManager = nullptr;
 }
 
 
 void MainWindow::on_btnKirjaudu_clicked()
 {
-    emit signalKirjaudu();
+    //emit signalKirjaudu();
 }
 
-void MainWindow::loginSlot()
+void MainWindow::checkCardSlot(QNetworkReply *reply)
 {
-    objConPass->show();
-    //this->close();
+    QByteArray response_data=reply->readAll();
+    qDebug()<<"DATA : "+response_data;
+     QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
+     QJsonArray json_array = json_doc.array();
+     QString idcard;
+     foreach (const QJsonValue &value, json_array) {
+        QJsonObject json_obj = value.toObject();
+        idcard+=QString::number(json_obj["idkortti"].toInt());}
+     /*QString filename = "D:\\card.txt"; //save account id to file
+     qDebug()<<idcard;
+     QFile file(filename);
+            if (file.open(QIODevice::ReadWrite)) {
+                QTextStream stream(&file);
+                stream << idcard;}
+            file.close(); */
+    if (response_data.size() > 0){
+        connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SIGNAL(connectingSlot(idcard)));
+        emit signalLogin(idcard);
+        objConPass->showFullScreen();
+        qDebug()<<"ID correct -> open pin-form";}
+
+    else {
+        qDebug() << "No such card!";
+    }
+    reply->deleteLater();
 }
+
+
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
@@ -104,6 +131,14 @@ void MainWindow::on_btnReset_clicked()
 
 void MainWindow::on_btnOK_clicked()
 {
-
+    QString site_url="http://localhost:3000/kortti/"+ui->lineEditID->text();
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    checkCardManager = new QNetworkAccessManager(this);
+    connect(checkCardManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkCardSlot(QNetworkReply*)));
+    reply = checkCardManager->get(request);
 }
-

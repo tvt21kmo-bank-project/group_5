@@ -6,7 +6,7 @@ consolePassword::consolePassword(QWidget *parent) :
     ui(new Ui::consolePassword)
 {
     ui->setupUi(this);
-    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+    //connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
 }
 
 consolePassword::~consolePassword()
@@ -14,16 +14,30 @@ consolePassword::~consolePassword()
     delete ui;
     delete objConMain;
     objConMain = nullptr;
+    delete loginManager;
+    loginManager = nullptr;
+}
+
+void consolePassword::connectingSlot(const QString &)
+{
+    QString value;
+    value = connectingSlot();
+
 }
 
 void consolePassword::on_btnKirjaudu_clicked()
 {
-     emit signalKirjaudu();
+     //emit signalKirjaudu();
 }
 
-void consolePassword::loginSlot()
+void consolePassword::loginSlot(QNetworkReply*)
 {
-    objConMain->show();
+    QByteArray response_data=reply->readAll();
+    if (response_data == "true"){
+    objConMain->showFullScreen();}
+    else {
+        qDebug() << "Väärä PIN";
+    }
     //this->hide();
 }
 
@@ -96,5 +110,18 @@ void consolePassword::on_btnReset_clicked()
 void consolePassword::on_btnOK_clicked()
 {
 
+    QJsonObject json; //create JSON object and insert data
+    json.insert("idcard",);
+    json.insert("pincode",ui->lineEditPIN->text());
+    QString site_url="http://localhost:3000/login";
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url)); request.setHeader(QNetworkRequest::ContentTypeHeader,
+    "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    loginManager = new QNetworkAccessManager(this);
+    connect(loginManager, SIGNAL(signalKirjaudu(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
+    reply = loginManager->post(request, QJsonDocument(json).toJson());
 }
 
