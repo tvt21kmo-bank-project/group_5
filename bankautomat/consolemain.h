@@ -34,8 +34,8 @@ signals:
 
 private:
     Ui::consoleMain *ui;
-    consoleNosto *objConNosto = new consoleNosto;
-    consoleTilitapahtumat *objConTilitapahtumat = new consoleTilitapahtumat;
+    consoleNosto *objConNosto;
+    consoleTilitapahtumat *objConTilitapahtumat;
     QTimer *objTimer;
     int counter;
 

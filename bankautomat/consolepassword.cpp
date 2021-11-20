@@ -6,6 +6,7 @@ consolePassword::consolePassword(QWidget *parent) :
     ui(new Ui::consolePassword)
 {
     ui->setupUi(this);
+    objConMain = new consoleMain;
     connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
 }
 
@@ -24,7 +25,6 @@ void consolePassword::on_btnKirjaudu_clicked()
 void consolePassword::loginSlot()
 {
     objConMain->show();
-    //this->hide();
 }
 
 void consolePassword::on_btnZero_clicked()

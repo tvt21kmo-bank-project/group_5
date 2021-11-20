@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    objConPass = new consolePassword;
+    objConMain = new consoleMain;
     connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
 }
 
@@ -14,6 +16,9 @@ MainWindow::~MainWindow()
     delete ui;
     delete objConPass;
     objConPass = nullptr;
+
+    delete objConMain;
+    objConMain = nullptr;
 }
 
 
@@ -25,7 +30,6 @@ void MainWindow::on_btnKirjaudu_clicked()
 void MainWindow::loginSlot()
 {
     objConPass->show();
-    //this->close();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -37,7 +41,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::on_btnZero_clicked()
 {
-
     ui->lineEditID->insert("0");
 }
 

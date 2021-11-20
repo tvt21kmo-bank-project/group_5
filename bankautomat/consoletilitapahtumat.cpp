@@ -17,6 +17,7 @@ consoleTilitapahtumat::~consoleTilitapahtumat()
 void consoleTilitapahtumat::on_btnSulje_clicked()
 {
     this->close();
+    emit closeWindow();
 }
 
 void consoleTilitapahtumat::timerSlot()
