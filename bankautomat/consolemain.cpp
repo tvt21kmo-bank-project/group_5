@@ -7,15 +7,23 @@ consoleMain::consoleMain(QWidget *parent) :
 {
     ui->setupUi(this);
     objTimer = new QTimer;
+    objConNosto= new consoleNosto;
+    objConTilitapahtumat = new consoleTilitapahtumat;
+    counter = 0;
 }
 
 consoleMain::~consoleMain()
 {
     delete ui;
+
     delete objConNosto;
     objConNosto = nullptr;
+
     delete objTimer;
     objTimer = nullptr;
+
+    delete objConTilitapahtumat;
+    objConTilitapahtumat = nullptr;
 }
 
 
@@ -24,11 +32,11 @@ void consoleMain::on_btnNosto_clicked()
 {
 
     objConNosto->show();
-    //this->hide();
     counter = 0;
-    connect(objTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
-    connect(this, SIGNAL(closeWindow()), this, SLOT(slotClose()));
+    connect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
+    connect(objConNosto, SIGNAL(closeWindow()), this, SLOT(slotCloseNosto()));
     objTimer->start(1000);
+    this->hide();
 }
 
 void consoleMain::timerSlot()
@@ -36,19 +44,44 @@ void consoleMain::timerSlot()
     qDebug() << counter;
     counter++;
     if(counter == 10){
-        disconnect(objTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+        counter = 0;
         emit closeWindow();
     }
 }
 
-void consoleMain::slotClose()
+void consoleMain::slotCloseNosto()
 {
+    disconnect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
     objConNosto->close();
+    this->show();
+}
+
+void consoleMain::slotCloseTilitapahtumat()
+{
+    disconnect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
+    objConTilitapahtumat->close();
+    this->show();
+}
+
+void consoleMain::on_btnTilitapahtumat_clicked()
+{
+    objConTilitapahtumat->show();
+    counter = 0;
+    connect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
+    connect(objConTilitapahtumat, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));
+    objTimer->start(1000);
+    this->hide();
 }
 
 
-void consoleMain::on_btnSulje_clicked()
+void consoleMain::on_btnSaldo_clicked()
+{
+
+}
+
+void consoleMain::on_btnKirjauduUlos_clicked()
 {
     this->close();
 }
+
 

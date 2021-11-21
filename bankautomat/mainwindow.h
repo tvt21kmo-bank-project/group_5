@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "consolepassword.h"
+#include "consolemain.h"
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QtNetwork>
@@ -42,6 +43,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+<<<<<<< HEAD
     consolePassword *objConPass = new consolePassword;
     QNetworkReply *reply;
     QNetworkAccessManager *checkCardManager;
@@ -51,6 +53,10 @@ private:
 signals:
    void signalLogin(const QString &);
    void finished(QNetworkReply*);
+=======
+    consolePassword *objConPass;
+    consoleMain *objConMain;
+>>>>>>> main
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

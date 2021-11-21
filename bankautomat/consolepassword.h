@@ -60,11 +60,15 @@ private slots:
 
 private:
     Ui::consolePassword *ui;
+<<<<<<< HEAD
     consoleMain *objConMain = new consoleMain;
     QNetworkAccessManager *loginManager;
     QNetworkReply *reply;
     QByteArray response_data;
     QString cardID;
+=======
+    consoleMain *objConMain;
+>>>>>>> main
 };
 
 #endif // CONSOLEPASSWORD_H

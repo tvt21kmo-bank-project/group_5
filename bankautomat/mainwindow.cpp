@@ -6,7 +6,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+<<<<<<< HEAD
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
+=======
+    objConPass = new consolePassword;
+    objConMain = new consoleMain;
+    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+>>>>>>> main
 }
 
 MainWindow::~MainWindow()
@@ -14,8 +20,14 @@ MainWindow::~MainWindow()
     delete ui;
     delete objConPass;
     objConPass = nullptr;
+<<<<<<< HEAD
     delete checkCardManager;
     checkCardManager = nullptr;
+=======
+
+    delete objConMain;
+    objConMain = nullptr;
+>>>>>>> main
 }
 
 
@@ -52,7 +64,14 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)
     reply->deleteLater();
 }
 
+<<<<<<< HEAD
 
+=======
+void MainWindow::loginSlot()
+{
+    objConPass->show();
+}
+>>>>>>> main
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
@@ -63,7 +82,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::on_btnZero_clicked()
 {
-
     ui->lineEditID->insert("0");
 }
 

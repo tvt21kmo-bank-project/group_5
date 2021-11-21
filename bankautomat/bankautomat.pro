@@ -12,6 +12,7 @@ SOURCES += \
     consolemain.cpp \
     consolenosto.cpp \
     consolepassword.cpp \
+    consoletilitapahtumat.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -19,12 +20,14 @@ HEADERS += \
     consolemain.h \
     consolenosto.h \
     consolepassword.h \
+    consoletilitapahtumat.h \
     mainwindow.h
 
 FORMS += \
     consolemain.ui \
     consolenosto.ui \
     consolepassword.ui \
+    consoletilitapahtumat.ui \
     mainwindow.ui
 
 # Default rules for deployment.

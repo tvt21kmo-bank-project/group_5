@@ -6,7 +6,12 @@ consolePassword::consolePassword(QWidget *parent) :
     ui(new Ui::consolePassword)
 {
     ui->setupUi(this);
+<<<<<<< HEAD
     //connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+=======
+    objConMain = new consoleMain;
+    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+>>>>>>> main
 }
 
 consolePassword::~consolePassword()
@@ -32,6 +37,7 @@ void consolePassword::on_btnKirjaudu_clicked()
 
 void consolePassword::loginSlot(QNetworkReply*)
 {
+<<<<<<< HEAD
     QByteArray response_data=reply->readAll();
     if (response_data == "true"){
     objConMain->showFullScreen();}
@@ -40,6 +46,9 @@ void consolePassword::loginSlot(QNetworkReply*)
     }
     reply->deleteLater();
     //this->hide();
+=======
+    objConMain->show();
+>>>>>>> main
 }
 
 void consolePassword::on_btnZero_clicked()
