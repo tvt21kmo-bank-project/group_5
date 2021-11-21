@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const login = require('../models/login_model');
+const login = require('../models/loginID_model');
 
 router.get('/:id',
   function(request, response) {
