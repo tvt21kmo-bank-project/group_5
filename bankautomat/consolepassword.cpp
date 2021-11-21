@@ -15,11 +15,14 @@ consolePassword::~consolePassword()
     delete ui;
     delete objConMain;
     objConMain = nullptr;
+    delete loginManager;
+    loginManager = nullptr;
 }
 
-void consolePassword::connectingSlot(int iidee)
+void consolePassword::connectingSlot(const QString &idcard)
 {
-    qDebug() << iidee;
+    cardID = idcard;
+    qDebug() << "asiakkaan ID" << cardID;
 }
 
 void consolePassword::on_btnKirjaudu_clicked()
@@ -27,7 +30,7 @@ void consolePassword::on_btnKirjaudu_clicked()
      emit signalKirjaudu();
 }
 
-void consolePassword::loginSlot()
+void consolePassword::loginSlotFast()
 {
     objConMain->show();
 }
@@ -101,17 +104,28 @@ void consolePassword::on_btnReset_clicked()
 void consolePassword::on_btnOK_clicked()
 {
     QJsonObject json; //create JSON object and insert data
-    // json.insert("idcard",);
-     json.insert("pincode",ui->lineEditPIN->text());
-     QString site_url="http://localhost:3000/login";
-     QString credentials="1234:4321";
-     QNetworkRequest request((site_url)); request.setHeader(QNetworkRequest::ContentTypeHeader,
-     "application/json");
-     QByteArray data = credentials.toLocal8Bit().toBase64();
-     QString headerData = "Basic " + data;
-     request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
-     loginManager = new QNetworkAccessManager(this);
-     connect(loginManager, SIGNAL(signalKirjaudu(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply *reply)));
-     reply = loginManager->post(request, QJsonDocument(json).toJson());
+    json.insert("idcard",cardID);
+    json.insert("pincode",ui->lineEditPIN->text());
+    QString site_url="http://localhost:3000/login";
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url)); request.setHeader(QNetworkRequest::ContentTypeHeader,
+    "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    loginManager = new QNetworkAccessManager(this);
+    connect(loginManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
+    reply = loginManager->post(request, QJsonDocument(json).toJson());
+}
+
+void consolePassword::loginSlot(QNetworkReply *reply)
+{
+    QByteArray response_data=reply->readAll();
+     if (response_data == "true") {
+        objConMain->showFullScreen();
+     } else {
+         qDebug() << "Väärä PIN";
+     }
+     reply->deleteLater();
 }
 

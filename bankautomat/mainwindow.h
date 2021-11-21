@@ -27,7 +27,7 @@ public:
 signals:
     void signalKirjaudu();
     void finished(QNetworkReply*);
-    void signalID(int);
+    void signalLogin(const QString &);
 
 private slots:
     void on_btnKirjaudu_clicked(); // for testing purposes
@@ -53,8 +53,7 @@ private:
     QNetworkReply *reply;
     QNetworkAccessManager *checkCardManager;
     QByteArray response_data;
-    QString *idkortti;
-    int idkayttis;
+    QString idcard;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

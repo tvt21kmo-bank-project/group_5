@@ -1,8 +1,8 @@
 const db = require('../database.js');
 
-const login = {
-  checkID: function(idkortti, callback) {
-      return db.query('select idkortti from kortti where idkortti = ?', [idkortti], callback);
+const login={
+  checkPincode: function(idcard, callback) {
+      return db.query('SELECT pinkoodi FROM kortti WHERE idkortti = ?',[idcard], callback);
     }
 };
 

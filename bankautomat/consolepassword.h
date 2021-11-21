@@ -7,6 +7,8 @@
 #include <QNetworkAccessManager>
 #include <QJsonDocument>
 #include <QDebug>
+#include <QFile>
+#include <QTextStream>
 
 
 namespace Ui {
@@ -23,39 +25,26 @@ public:
 
 signals:
     void signalKirjaudu();
+    void finished(QNetworkReply*);
+    void sendID(const QString &);
 
 private slots:
 
-    void connectingSlot(int);
-
-  //  void loginSlot(QNetworkReply *reply);
-
-    void loginSlot();
-
+    void connectingSlot(const QString &);
+    void loginSlot(QNetworkReply *reply);
+    void loginSlotFast();
     void on_btnKirjaudu_clicked(); // for testing purposes
-
     void on_btnZero_clicked();
-
     void on_btnOne_clicked();
-
     void on_btnTwo_clicked();
-
     void on_btnThree_clicked();
-
     void on_btnFour_clicked();
-
     void on_btnFive_clicked();
-
     void on_btnSix_clicked();
-
     void on_btnSeven_clicked();
-
     void on_btnEight_clicked();
-
     void on_btnNine_clicked();
-
     void on_btnReset_clicked();
-
     void on_btnOK_clicked();
 
 private:
@@ -64,7 +53,7 @@ private:
     QNetworkAccessManager *loginManager;
     QNetworkReply *reply;
     QByteArray response_data;
-    int cardID;
+    QString cardID;
 };
 
 #endif // CONSOLEPASSWORD_H
