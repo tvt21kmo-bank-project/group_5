@@ -8,6 +8,9 @@
 #include <QtNetwork>
 #include <QNetworkAccessManager>
 #include <QJsonDocument>
+#include <QDebug>
+#include <QFile>
+#include <QTextStream>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,9 +26,12 @@ public:
 
 signals:
     void signalKirjaudu();
+    void finished(QNetworkReply*);
+    void signalID(int);
 
 private slots:
     void on_btnKirjaudu_clicked(); // for testing purposes
+    void checkCardSlot(QNetworkReply *reply);
     void loginSlot();
     void on_btnZero_clicked();
     void on_btnOne_clicked();
@@ -44,6 +50,11 @@ private:
     Ui::MainWindow *ui;
     consolePassword *objConPass;
     consoleMain *objConMain;
+    QNetworkReply *reply;
+    QNetworkAccessManager *checkCardManager;
+    QByteArray response_data;
+    QString *idkortti;
+    int idkayttis;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
