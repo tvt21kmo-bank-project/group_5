@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     objConPass = new consolePassword;
     objConMain = new consoleMain;
     connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+     connect(this, SIGNAL(signalLogin(const QString &)),
+             objConPass, SLOT(connectingSlot(const QString &)));
 }
 
 MainWindow::~MainWindow()
@@ -107,6 +109,34 @@ void MainWindow::on_btnReset_clicked()
 
 void MainWindow::on_btnOK_clicked()
 {
+    QJsonObject json;
+    QString idkortti = ui->lineEditID->text();
+    QString site_url="http://localhost:3000/loginID/"+idkortti;
+    QString credentials="1234:4321";
+    idcard = idkortti;
+    QNetworkRequest request((site_url));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
 
+    checkCardManager = new QNetworkAccessManager(this);
+    connect(checkCardManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkCardSlot(QNetworkReply*)));
+    reply = checkCardManager->get(request);
 }
+
+void MainWindow::checkCardSlot(QNetworkReply *reply)
+{
+    QByteArray response_data=reply->readAll();
+      qDebug() << response_data;
+
+      if(response_data == "true") {
+          qDebug() << "Oikea tunnus ...avaa form";
+          emit signalLogin(idcard);
+          objConPass->show();
+      }
+}
+
+
+
 

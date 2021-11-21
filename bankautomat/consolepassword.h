@@ -3,6 +3,13 @@
 
 #include <QDialog>
 #include <consolemain.h>
+#include <QtNetwork>
+#include <QNetworkAccessManager>
+#include <QJsonDocument>
+#include <QDebug>
+#include <QFile>
+#include <QTextStream>
+
 
 namespace Ui {
 class consolePassword;
@@ -18,39 +25,35 @@ public:
 
 signals:
     void signalKirjaudu();
+    void finished(QNetworkReply*);
+    void sendID(const QString &);
 
 private slots:
-    void loginSlot();
 
+    void connectingSlot(const QString &);
+    void loginSlot(QNetworkReply *reply);
+    void loginSlotFast();
     void on_btnKirjaudu_clicked(); // for testing purposes
-
     void on_btnZero_clicked();
-
     void on_btnOne_clicked();
-
     void on_btnTwo_clicked();
-
     void on_btnThree_clicked();
-
     void on_btnFour_clicked();
-
     void on_btnFive_clicked();
-
     void on_btnSix_clicked();
-
     void on_btnSeven_clicked();
-
     void on_btnEight_clicked();
-
     void on_btnNine_clicked();
-
     void on_btnReset_clicked();
-
     void on_btnOK_clicked();
 
 private:
     Ui::consolePassword *ui;
     consoleMain *objConMain;
+    QNetworkAccessManager *loginManager;
+    QNetworkReply *reply;
+    QByteArray response_data;
+    QString cardID;
 };
 
 #endif // CONSOLEPASSWORD_H

@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const login = require('../models/login_model.js');
 
-router.post('/', 
+router.post('/',
   function(request, response) {
     if(request.body.idcard && request.body.pincode){
       const idcard = request.body.idcard;
@@ -22,7 +22,7 @@ router.post('/',
                 else {
                     console.log("wrong password");
                     response.send(false);
-                }			
+                }
               }
               );
             }
