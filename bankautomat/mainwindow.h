@@ -24,6 +24,7 @@ public:
     ~MainWindow();
 
 private slots:
+
     void on_btnKirjaudu_clicked(); // for testing purposes
     void checkCardSlot(QNetworkReply *reply);
     void on_btnZero_clicked();

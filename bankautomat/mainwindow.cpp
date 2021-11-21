@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-   // connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+    connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
 }
 
 MainWindow::~MainWindow()
@@ -41,10 +41,9 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)
                 QTextStream stream(&file);
                 stream << idcard;}
             file.close(); */
-    if (response_data.size() > 0){
-        connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SIGNAL(connectingSlot(idcard)));
+    if (response_data.size() > 2){
         emit signalLogin(idcard);
-        objConPass->showFullScreen();
+        objConPass->show();
         qDebug()<<"ID correct -> open pin-form";}
 
     else {
@@ -141,4 +140,5 @@ void MainWindow::on_btnOK_clicked()
     checkCardManager = new QNetworkAccessManager(this);
     connect(checkCardManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkCardSlot(QNetworkReply*)));
     reply = checkCardManager->get(request);
+
 }

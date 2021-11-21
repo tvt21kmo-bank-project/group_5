@@ -23,7 +23,7 @@ public:
     ~consolePassword();
 
 signals:
-    void signalKirjaudu(QNetworkReply*);
+    void finished(QNetworkReply*);
     void sendID(const QString &);
 
 private slots:
@@ -64,7 +64,7 @@ private:
     QNetworkAccessManager *loginManager;
     QNetworkReply *reply;
     QByteArray response_data;
-    int cardID;
+    QString cardID;
 };
 
 #endif // CONSOLEPASSWORD_H
