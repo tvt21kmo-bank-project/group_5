@@ -7,7 +7,7 @@ consolePassword::consolePassword(QWidget *parent) :
 {
     ui->setupUi(this);
     objConMain = new consoleMain;
-    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlotFast()));
 }
 
 consolePassword::~consolePassword()
