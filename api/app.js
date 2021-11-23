@@ -24,12 +24,12 @@ function myAuthorizer(username, password, cb) {
 }
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var asiakasRouter = require('./routes/asiakas');
 var tiliRouter = require('./routes/tili');
 var korttiRouter = require('./routes/kortti');
 var loginIDRouter = require('./routes/loginID');
 var loginRouter = require('./routes/login');
+var tapahtumaRouter = require('./routes/tilitapahtumat');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/tilitapahtumat', tapahtumaRouter);
 app.use('/asiakas', asiakasRouter);
 app.use('/tili', tiliRouter);
 app.use('/kortti', korttiRouter);

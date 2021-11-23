@@ -4,8 +4,13 @@
 #include <QDialog>
 #include <QTimer>
 #include <QDebug>
+#include <QString>
+#include <QKeyEvent>
 #include "consolenosto.h"
 #include "consoletilitapahtumat.h"
+#include <QtNetwork>
+#include <QNetworkAccessManager>
+#include <QJsonDocument>
 
 namespace Ui {
 class consoleMain;
@@ -20,6 +25,8 @@ public:
     ~consoleMain();
 
 private slots:
+    void getTapahtumatSlot(QNetworkReply*);
+    void getIDSlot(const QString &);//Kortinnumeron vastaanottaja
     void slotCloseNosto();
     void timerSlot();
     void slotCloseTilitapahtumat();
@@ -31,6 +38,8 @@ private slots:
 
 signals:
     void closeWindow();
+    void sendTilitapahtumat(const QString &);
+    void finished(QNetworkReply*);
 
 private:
     Ui::consoleMain *ui;
@@ -38,6 +47,11 @@ private:
     consoleTilitapahtumat *objConTilitapahtumat;
     QTimer *objTimer;
     int counter;
+    QString tilitapahtumat; //Datan välittämistä varten
+    QString IDcard;
+    QNetworkAccessManager *getManager;
+    QNetworkReply *replytapahtumat;
+    QByteArray response_data;
 
 };
 

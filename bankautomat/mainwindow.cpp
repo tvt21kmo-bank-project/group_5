@@ -8,9 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     objConPass = new consolePassword;
     objConMain = new consoleMain;
-    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
-     connect(this, SIGNAL(signalLogin(const QString &)),
-             objConPass, SLOT(connectingSlot(const QString &)));
+   // connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+    connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
 }
 
 MainWindow::~MainWindow()
@@ -113,7 +112,7 @@ void MainWindow::on_btnOK_clicked()
     QString idkortti = ui->lineEditID->text();
     QString site_url="http://localhost:3000/loginID/"+idkortti;
     QString credentials="1234:4321";
-    idcard = idkortti;
+    IDcard = idkortti;
     QNetworkRequest request((site_url));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     QByteArray data = credentials.toLocal8Bit().toBase64();
@@ -132,7 +131,8 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)
 
       if(response_data == "true") {
           qDebug() << "Oikea tunnus ...avaa form";
-          emit signalLogin(idcard);
+          emit signalLogin(IDcard);
+          ui->lineEditID->clear(); //Tyhjennetään ID-kenttä ja avataan PIN-kenttä
           objConPass->show();
       }
 }

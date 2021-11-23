@@ -7,7 +7,7 @@ consolePassword::consolePassword(QWidget *parent) :
 {
     ui->setupUi(this);
     objConMain = new consoleMain;
-    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
+    connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
 }
 
 consolePassword::~consolePassword()
@@ -19,10 +19,12 @@ consolePassword::~consolePassword()
     loginManager = nullptr;
 }
 
-void consolePassword::connectingSlot(const QString &idcard)
+void consolePassword::connectingSlot(const QString &IDcard)
 {
-    cardID = idcard;
-    qDebug() << "asiakkaan ID" << cardID;
+    ui->lineEditPIN->clear();
+    cardID = IDcard;
+    qDebug() << "asiakkaan ID paaswordissä" << cardID;
+
 }
 
 void consolePassword::on_btnKirjaudu_clicked()
@@ -122,7 +124,10 @@ void consolePassword::loginSlot(QNetworkReply *reply)
 {
     QByteArray response_data=reply->readAll();
      if (response_data == "true") {
-        objConMain->showFullScreen();
+        this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
+         emit sendID(cardID); //lähetetään korttinumero seuraavalle formille
+         objConMain->show();
+
      } else {
          qDebug() << "Väärä PIN";
      }
