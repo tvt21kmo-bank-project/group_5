@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDebug>
+#include <QString>
 
 namespace Ui {
 class consoleTilitapahtumat;
@@ -17,6 +18,7 @@ public:
     ~consoleTilitapahtumat();
 
 private slots:
+    void getDataSlot(const QString &);
     void on_btnSulje_clicked();
     void timerSlot();
 
@@ -26,6 +28,7 @@ signals:
 private:
     Ui::consoleTilitapahtumat *ui;
     int counter;
+    QString tapahtumat; //vastaanottaa jälleen kortinnumeron ym.välitettävän datan.
 };
 
 #endif // CONSOLETILITAPAHTUMAT_H

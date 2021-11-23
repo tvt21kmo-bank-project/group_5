@@ -53,7 +53,7 @@ private:
     QNetworkAccessManager *loginManager;
     QNetworkReply *reply;
     QByteArray response_data;
-    QString cardID;
+    QString cardID; //Kortinnumeron välittämistä varten
 };
 
 #endif // CONSOLEPASSWORD_H

@@ -7,11 +7,20 @@ consoleTilitapahtumat::consoleTilitapahtumat(QWidget *parent) :
 {
     ui->setupUi(this);
     counter = 0;
+
 }
 
 consoleTilitapahtumat::~consoleTilitapahtumat()
 {
     delete ui;
+}
+
+void consoleTilitapahtumat::getDataSlot(const QString &tilitapahtumat)
+{
+    tapahtumat = tilitapahtumat; //Käytössä koko oliossa
+    qDebug()<<"Asiakkaan tilitapahtumat" << tapahtumat;
+    ui->lineEditTapahtumat->setText(tapahtumat); //printataan tilitapahtumiin
+
 }
 
 void consoleTilitapahtumat::on_btnSulje_clicked()

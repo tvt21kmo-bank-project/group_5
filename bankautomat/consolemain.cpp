@@ -10,7 +10,10 @@ consoleMain::consoleMain(QWidget *parent) :
     objConNosto= new consoleNosto;
     objConTilitapahtumat = new consoleTilitapahtumat;
     counter = 0;
+    connect(this, SIGNAL(sendTilitapahtumat(const QString &)), objConTilitapahtumat, SLOT(getDataSlot(const QString &)));
+
 }
+
 
 consoleMain::~consoleMain()
 {
@@ -24,6 +27,33 @@ consoleMain::~consoleMain()
 
     delete objConTilitapahtumat;
     objConTilitapahtumat = nullptr;
+
+    delete getManager;
+    getManager = nullptr;
+}
+
+void consoleMain::getTapahtumatSlot(QNetworkReply*)
+{
+    response_data=replytapahtumat->readAll();
+    QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
+    QJsonArray json_array = json_doc.array();
+    QString tilitapahtumat;
+    foreach (const QJsonValue &value, json_array) {
+       QJsonObject json_obj = value.toObject();
+       tilitapahtumat+=QString::number(10)+"  "+json_obj["date"].toString()+" "+json_obj["tapahtuma"].toString()+"  "+json_obj["summa"].toInt();
+
+    }
+    qDebug() << "Tilitapahtumat: "<< tilitapahtumat;
+    emit sendTilitapahtumat(tilitapahtumat); //lähetetään data tilitapahtumille.
+    replytapahtumat->deleteLater();
+}
+
+
+void consoleMain::getIDSlot(const QString &cardID)
+{
+    IDcard = cardID;
+    qDebug() << "asiakkaan ID consolemainissa" << IDcard;
+
 }
 
 
@@ -65,7 +95,19 @@ void consoleMain::slotCloseTilitapahtumat()
 
 void consoleMain::on_btnTilitapahtumat_clicked()
 {
+    QString site_url="http://localhost:3000/tilitapahtumat/"+IDcard;
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+
+    getManager = new QNetworkAccessManager(this);
+    connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getTapahtumatSlot(QNetworkReply*)));
+    replytapahtumat = getManager->get(request);
     objConTilitapahtumat->show();
+
     counter = 0;
     connect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     connect(objConTilitapahtumat, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));

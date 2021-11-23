@@ -26,6 +26,16 @@
     <string>Sulje</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="lineEditTapahtumat">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>501</width>
+     <height>221</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
