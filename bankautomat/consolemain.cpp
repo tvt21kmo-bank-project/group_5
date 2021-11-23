@@ -49,6 +49,12 @@ void consoleMain::timerSlot()
     }
 }
 
+void consoleMain::slotCardID(const QString &id)
+{
+    korttiID = id;
+    qDebug() << korttiID;
+}
+
 void consoleMain::slotCloseNosto()
 {
     disconnect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));

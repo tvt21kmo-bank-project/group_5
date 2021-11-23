@@ -9,28 +9,28 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    consolecreditdebit.cpp \
     consolemain.cpp \
     consolenosto.cpp \
     consolepassword.cpp \
     consoletilitapahtumat.cpp \
-    creditdebit.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    consolecreditdebit.h \
     consolemain.h \
     consolenosto.h \
     consolepassword.h \
     consoletilitapahtumat.h \
-    creditdebit.h \
     mainwindow.h
 
 FORMS += \
+    consolecreditdebit.ui \
     consolemain.ui \
     consolenosto.ui \
     consolepassword.ui \
     consoletilitapahtumat.ui \
-    creditdebit.ui \
     mainwindow.ui
 
 # Default rules for deployment.

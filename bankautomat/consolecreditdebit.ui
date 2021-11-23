@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>creditDebit</class>
- <widget class="QDialog" name="creditDebit">
+ <class>consoleCreditDebit</class>
+ <widget class="QDialog" name="consoleCreditDebit">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>670</width>
-    <height>379</height>
+    <width>534</width>
+    <height>348</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,9 @@
   <widget class="QPushButton" name="btnCredit">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>190</y>
-     <width>141</width>
+     <x>90</x>
+     <y>170</y>
+     <width>131</width>
      <height>71</height>
     </rect>
    </property>
@@ -29,9 +29,9 @@
   <widget class="QPushButton" name="btnDebit">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>190</y>
-     <width>141</width>
+     <x>290</x>
+     <y>170</y>
+     <width>131</width>
      <height>71</height>
     </rect>
    </property>

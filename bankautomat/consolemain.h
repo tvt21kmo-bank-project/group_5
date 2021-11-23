@@ -22,6 +22,7 @@ public:
 private slots:
     void slotCloseNosto();
     void timerSlot();
+    void slotCardID(const QString &);
     void slotCloseTilitapahtumat();
     void on_btnNosto_clicked();
     void on_btnTilitapahtumat_clicked();
@@ -38,6 +39,7 @@ private:
     consoleTilitapahtumat *objConTilitapahtumat;
     QTimer *objTimer;
     int counter;
+    QString korttiID;
 
 };
 
