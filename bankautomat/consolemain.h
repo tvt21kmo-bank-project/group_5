@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include "consolenosto.h"
 #include "consoletilitapahtumat.h"
+#include "consolesaldo.h"
 #include <QtNetwork>
 #include <QNetworkAccessManager>
 #include <QJsonDocument>
@@ -28,29 +29,35 @@ private slots:
     void getTapahtumatSlot(QNetworkReply*);
     void getIDSlot(const QString &);//Kortinnumeron vastaanottaja
     void slotCloseNosto();
+    void slotCloseSaldo();
     void timerSlot();
     void slotCloseTilitapahtumat();
     void on_btnNosto_clicked();
     void on_btnTilitapahtumat_clicked();
     void on_btnSaldo_clicked();
     void on_btnKirjauduUlos_clicked();
+    void getSaldoSlot(QNetworkReply*);
 
 
 signals:
     void closeWindow();
     void sendTilitapahtumat(const QString &);
     void finished(QNetworkReply*);
+    void sendSaldo(const QString &);
 
 private:
     Ui::consoleMain *ui;
     consoleNosto *objConNosto;
     consoleTilitapahtumat *objConTilitapahtumat;
+    consoleSaldo *objConSaldo;
     QTimer *objTimer;
     int counter;
     QString tilitapahtumat; //Datan välittämistä varten
+    QString saldo;
     QString IDcard;
     QNetworkAccessManager *getManager;
     QNetworkReply *replytapahtumat;
+    QNetworkReply *replysaldo;
     QByteArray response_data;
 
 };
