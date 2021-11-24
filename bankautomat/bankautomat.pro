@@ -13,6 +13,7 @@ SOURCES += \
     consolemain.cpp \
     consolenosto.cpp \
     consolepassword.cpp \
+    consolesaldo.cpp \
     consoletilitapahtumat.cpp \
     main.cpp \
     mainwindow.cpp
@@ -22,6 +23,7 @@ HEADERS += \
     consolemain.h \
     consolenosto.h \
     consolepassword.h \
+    consolesaldo.h \
     consoletilitapahtumat.h \
     mainwindow.h
 
@@ -30,6 +32,7 @@ FORMS += \
     consolemain.ui \
     consolenosto.ui \
     consolepassword.ui \
+    consolesaldo.ui \
     consoletilitapahtumat.ui \
     mainwindow.ui
 

@@ -55,10 +55,8 @@ private:
     QNetworkAccessManager *loginManager, *credebManager;
     QNetworkReply *reply;
     QByteArray response_data;
-    QString cardID;
+    QString cardID; //Kortinnumeron välittämistä varten
     consoleCreditDebit *objCredeb;
-
-
 };
 
 #endif // CONSOLEPASSWORD_H

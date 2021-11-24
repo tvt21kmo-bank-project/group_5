@@ -9,8 +9,7 @@
 #include <QNetworkAccessManager>
 #include <QJsonDocument>
 #include <QDebug>
-#include <QFile>
-#include <QTextStream>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -53,7 +52,7 @@ private:
     QNetworkReply *reply;
     QNetworkAccessManager *checkCardManager;
     QByteArray response_data;
-    QString idcard;
+    QString IDcard; //välitetään signaalina muille olioille
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
