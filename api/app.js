@@ -30,6 +30,7 @@ var korttiRouter = require('./routes/kortti');
 var loginIDRouter = require('./routes/loginID');
 var loginRouter = require('./routes/login');
 var tapahtumaRouter = require('./routes/tilitapahtumat');
+var saldoRouter = require('./routes/saldo');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -44,5 +45,6 @@ app.use('/tili', tiliRouter);
 app.use('/kortti', korttiRouter);
 app.use('/loginID', loginIDRouter);
 app.use('/login', loginRouter);
+app.use('/saldo', saldoRouter);
 
 module.exports = app;
