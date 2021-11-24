@@ -1,0 +1,22 @@
+USE `bankdb`;
+DROP procedure IF EXISTS `transfer_credit`;
+
+DELIMITER $$
+USE `bankdb`$$
+CREATE PROCEDURE `transfer_credit`(IN tilitunnus INT,IN korttitunnus INT, IN maara DOUBLE)
+BEGIN
+DECLARE tilitesti INT DEFAULT 0;
+START TRANSACTION;
+UPDATE tili SET luottoraja = luottoraja - maara WHERE idtili = tilitunnus AND luottoraja > maara;
+SET tilitesti = row_count();
+ 
+IF(tilitesti > 0) THEN
+	COMMIT;
+    INSERT INTO tilitapahtumat(date,tapahtuma,summa,tili_idTili,idkortti)
+    VALUES(NOW(),'credit_nosto',maara,tilitunnus,korttitunnus);
+    ELSE 
+    ROLLBACK;
+END IF;
+END$$
+
+DELIMITER ;
