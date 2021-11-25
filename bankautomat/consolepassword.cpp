@@ -158,6 +158,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           emit sendID(cardID);
           connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
           objCredeb->show();
+          this->close();
       } else if(response_data == "false") {
           qDebug() << "Ei yhdistelmakorttiominaisuutta";
           connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
