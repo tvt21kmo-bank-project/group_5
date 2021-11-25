@@ -7,7 +7,11 @@ consolePassword::consolePassword(QWidget *parent) :
 {
     ui->setupUi(this);
     objConMain = new consoleMain;
+    objCredeb = new consoleCreditDebit;
+    credebManager = new QNetworkAccessManager;
+    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlotFast()));
     connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
+
 }
 
 consolePassword::~consolePassword()
@@ -17,6 +21,8 @@ consolePassword::~consolePassword()
     objConMain = nullptr;
     delete loginManager;
     loginManager = nullptr;
+    delete objCredeb;
+    objCredeb = nullptr;
 }
 
 void consolePassword::connectingSlot(const QString &IDcard)
@@ -108,6 +114,7 @@ void consolePassword::on_btnOK_clicked()
     QJsonObject json; //create JSON object and insert data
     json.insert("idcard",cardID);
     json.insert("pincode",ui->lineEditPIN->text());
+    ui->lineEditPIN->clear();
     QString site_url="http://localhost:3000/login";
     QString credentials="1234:4321";
     QNetworkRequest request((site_url)); request.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -124,13 +131,40 @@ void consolePassword::loginSlot(QNetworkReply *reply)
 {
     QByteArray response_data=reply->readAll();
      if (response_data == "true") {
-        this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
-         emit sendID(cardID); //lähetetään korttinumero seuraavalle formille
-         objConMain->show();
-
+         QJsonObject json;
+         QString site_url="http://localhost:3000/creditdebit/"+cardID;
+         QString credentials="1234:4321";
+         QNetworkRequest request((site_url));
+         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+         QByteArray data = credentials.toLocal8Bit().toBase64();
+         QString headerData = "Basic " + data;
+         request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+         connect(credebManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(credebSlot(QNetworkReply*)));
+         reply = credebManager->get(request);
      } else {
          qDebug() << "Väärä PIN";
      }
-     reply->deleteLater();
+    // reply->deleteLater(); tätä ei saa olla !!!
+}
+
+void consolePassword::credebSlot(QNetworkReply *reply)
+{
+    QByteArray response_data=reply->readAll();
+      qDebug() << response_data;
+
+      if(response_data == "true") {
+          qDebug() << "Credit/Debit ominaisuus";
+          connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
+          emit sendID(cardID);
+          connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
+          objCredeb->show();
+      } else if(response_data == "false") {
+          qDebug() << "Ei yhdistelmakorttiominaisuutta";
+          connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
+          emit sendID(cardID); //lähetetään korttinumero seuraavalle formille
+          disconnect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
+          objConMain->show();
+          this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
+      }
 }
 

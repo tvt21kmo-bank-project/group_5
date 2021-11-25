@@ -29,6 +29,7 @@ var tiliRouter = require('./routes/tili');
 var korttiRouter = require('./routes/kortti');
 var loginIDRouter = require('./routes/loginID');
 var loginRouter = require('./routes/login');
+var creditdebitRouter = require('./routes/creditdebit');
 var tapahtumaRouter = require('./routes/tilitapahtumat');
 var saldoRouter = require('./routes/saldo');
 
@@ -45,6 +46,7 @@ app.use('/tili', tiliRouter);
 app.use('/kortti', korttiRouter);
 app.use('/loginID', loginIDRouter);
 app.use('/login', loginRouter);
+app.use('/creditdebit', creditdebitRouter);
 app.use('/saldo', saldoRouter);
 
 module.exports = app;

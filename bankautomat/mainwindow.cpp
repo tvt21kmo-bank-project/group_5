@@ -110,6 +110,7 @@ void MainWindow::on_btnOK_clicked()
 {
     QJsonObject json;
     QString idkortti = ui->lineEditID->text();
+    ui->lineEditID->clear();
     QString site_url="http://localhost:3000/loginID/"+idkortti;
     QString credentials="1234:4321";
     IDcard = idkortti;

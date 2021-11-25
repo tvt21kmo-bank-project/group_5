@@ -31,6 +31,7 @@ private slots:
     void slotCloseNosto();
     void slotCloseSaldo();
     void timerSlot();
+    void slotCardID(const QString &);
     void slotCloseTilitapahtumat();
     void on_btnNosto_clicked();
     void on_btnTilitapahtumat_clicked();
@@ -52,6 +53,7 @@ private:
     consoleSaldo *objConSaldo;
     QTimer *objTimer;
     int counter;
+    QString korttiID;
     QString tilitapahtumat; //Datan välittämistä varten
     QString saldo;
     QString IDcard;

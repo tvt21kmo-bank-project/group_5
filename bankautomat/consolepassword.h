@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
+#include "consolecreditdebit.h"
 
 
 namespace Ui {
@@ -32,6 +33,7 @@ private slots:
 
     void connectingSlot(const QString &);
     void loginSlot(QNetworkReply *reply);
+    void credebSlot(QNetworkReply * reply);
     void loginSlotFast();
     void on_btnKirjaudu_clicked(); // for testing purposes
     void on_btnZero_clicked();
@@ -50,10 +52,11 @@ private slots:
 private:
     Ui::consolePassword *ui;
     consoleMain *objConMain;
-    QNetworkAccessManager *loginManager;
+    QNetworkAccessManager *loginManager, *credebManager;
     QNetworkReply *reply;
     QByteArray response_data;
     QString cardID; //Kortinnumeron välittämistä varten
+    consoleCreditDebit *objCredeb;
 };
 
 #endif // CONSOLEPASSWORD_H
