@@ -22,6 +22,10 @@ private slots:
     void on_btnSulje_clicked();
     void timerSlot();
 
+    void on_btnPrev10_clicked();
+
+    void on_btnNext10_clicked();
+
 signals:
     void closeWindow();
 

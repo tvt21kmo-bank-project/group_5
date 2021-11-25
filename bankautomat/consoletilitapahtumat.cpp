@@ -39,3 +39,15 @@ void consoleTilitapahtumat::timerSlot()
     }
 }
 
+
+void consoleTilitapahtumat::on_btnPrev10_clicked()
+{
+
+}
+
+
+void consoleTilitapahtumat::on_btnNext10_clicked()
+{
+
+}
+
