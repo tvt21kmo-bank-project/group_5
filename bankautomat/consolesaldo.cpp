@@ -22,7 +22,8 @@ void consoleSaldo::on_btnSulje_clicked()
 
 void consoleSaldo::getSaldo(const QString &saldo) //Vastaanottaa mainwindowsta tulevan tiedon ja näyttää sen tekstikentässä.
 {
-    asiakkaanSaldo = saldo;;
+    asiakkaanSaldo = saldo;
+    qDebug() <<"täältä tulee saldo:"<<asiakkaanSaldo;
     ui->lineEditSaldo->setText(asiakkaanSaldo);
 }
 

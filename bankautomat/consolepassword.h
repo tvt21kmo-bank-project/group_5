@@ -28,12 +28,14 @@ signals:
     void signalKirjaudu();
     void finished(QNetworkReply*);
     void sendID(const QString &);
+    void sendAsiakastiedot(const QString &);
 
 private slots:
 
     void connectingSlot(const QString &);
     void loginSlot(QNetworkReply *reply);
     void credebSlot(QNetworkReply * reply);
+    void getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot);
     void loginSlotFast();
     void on_btnKirjaudu_clicked(); // for testing purposes
     void on_btnZero_clicked();
@@ -57,6 +59,10 @@ private:
     QByteArray response_data;
     QString cardID; //Kortinnumeron välittämistä varten
     consoleCreditDebit *objCredeb;
+    QNetworkAccessManager *asiakastiedotManager;
+    QNetworkReply *replyAsiakastiedot;
+    QByteArray dataAsiakastiedot;
+    QByteArray response_dataAsiakastiedot;
 };
 
 #endif // CONSOLEPASSWORD_H

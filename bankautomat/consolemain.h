@@ -38,7 +38,12 @@ private slots:
     void on_btnSaldo_clicked();
     void on_btnKirjauduUlos_clicked();
     void getSaldoSlot(QNetworkReply*);
-
+    void getAsiakastiedot(const QString &);
+    void getKorttityyppiSlot(QNetworkReply*);
+    void getLuottorajaSlot(QNetworkReply*);
+    void getYhdistelmaSlotSaldo(const QString &);
+    void getYhdistelmaIDSlot(const QString &);
+    void getYhdistelmaSlotLuottoraja(const QString &);
 
 signals:
     void closeWindow();
@@ -57,10 +62,15 @@ private:
     QString tilitapahtumat; //Datan välittämistä varten
     QString saldo;
     QString IDcard;
+    QString iiteekortti;
     QNetworkAccessManager *getManager;
+    QNetworkAccessManager *korttityyppiManager;
+    QNetworkReply *replyKorttityyppi;
     QNetworkReply *replytapahtumat;
     QNetworkReply *replysaldo;
     QByteArray response_data;
+    QByteArray response_dataKorttityyppi;
+    QString asiakkaanTiedot;
 
 };
 

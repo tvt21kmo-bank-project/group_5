@@ -60,7 +60,11 @@ void consoleMain::getIDSlot(const QString &cardID)
 
 }
 
-
+void consoleMain::getYhdistelmaIDSlot(const QString &korttiID)
+{
+    iiteekortti = korttiID;
+    qDebug() <<"asiakkaan id korttityyppivalinnasta" << iiteekortti;
+}
 
 void consoleMain::on_btnNosto_clicked()
 {
@@ -145,22 +149,49 @@ void consoleMain::getSaldoSlot(QNetworkReply*)
 
     }
     emit sendSaldo(saldo); //Lähetetään tietokannasta saatu data saldo-ikkunaan.
-    replysaldo->deleteLater();
+   // replysaldo->deleteLater();
+}
+
+void consoleMain::getLuottorajaSlot(QNetworkReply*)
+{
+    response_data=replysaldo->readAll();
+    QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
+    QJsonArray json_array = json_doc.array();
+    QString saldo;
+    foreach (const QJsonValue &value, json_array) {
+       QJsonObject json_obj = value.toObject();
+       saldo+=QString::number(json_obj["luottoraja"].toInt())+"€ luottoraja Asiakas: "+json_obj["etunimi_asiakas"].toString()+" "+json_obj["sukunimi_asiakas"].toString()+"\r"; //Määritetään QString saldon sisältämä tieto.
+
+    }
+    emit sendSaldo(saldo); //Lähetetään tietokannasta saatu data saldo-ikkunaan.
+    //replysaldo->deleteLater();
+}
+
+void consoleMain::getYhdistelmaSlotSaldo(const QString &saldoYhdistelma )
+{
+    saldo = saldoYhdistelma;
+    emit sendSaldo(saldo);
+
+    }
+
+void consoleMain::getYhdistelmaSlotLuottoraja(const QString &luottorajaYhdistelma)
+{
+    saldo = luottorajaYhdistelma;
+    emit sendSaldo(saldo);
 }
 
 void consoleMain::on_btnSaldo_clicked()
 {
-    QString site_url="http://localhost:3000/saldo/"+IDcard; //Haetaan asiakkaan saldo tietokannasta kortin id:n perusteella.
-    QString credentials="1234:4321";
-    QNetworkRequest request((site_url));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    QByteArray data = credentials.toLocal8Bit().toBase64();
-    QString headerData = "Basic " + data;
-    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
-
-    getManager = new QNetworkAccessManager(this);
-    connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getSaldoSlot(QNetworkReply*)));
-    replysaldo = getManager->get(request);
+    QString site_urlKorttityyppi="http://localhost:3000/korttityyppi/"+korttiID;
+    QString credentialsKorttityyppi="1234:4321";
+    QNetworkRequest requestKorttityyppi((site_urlKorttityyppi)); requestKorttityyppi.setHeader(QNetworkRequest::ContentTypeHeader,
+    "application/json");
+    QByteArray dataKorttityyppi = credentialsKorttityyppi.toLocal8Bit().toBase64();
+    QString headerDataKorttityyppi = "Basic " + dataKorttityyppi;
+    requestKorttityyppi.setRawHeader( "Authorization", headerDataKorttityyppi.toLocal8Bit() );
+    korttityyppiManager = new QNetworkAccessManager(this);
+    connect(korttityyppiManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getKorttityyppiSlot(QNetworkReply*)));
+    replyKorttityyppi = korttityyppiManager->get(requestKorttityyppi);
     objConSaldo->show();
 
     counter = 0;
@@ -168,6 +199,48 @@ void consoleMain::on_btnSaldo_clicked()
     connect(objConSaldo, SIGNAL(closeWindow()), this, SLOT(slotCloseSaldo()));
     objTimer->start(1000);
     this->hide();
+}
+
+void consoleMain::getKorttityyppiSlot(QNetworkReply *replyKorttityyppi)
+{
+    QByteArray response_dataKorttityyppi=replyKorttityyppi->readAll();
+
+    if (response_dataKorttityyppi == "debit") {
+
+        QString site_url="http://localhost:3000/saldo/"+korttiID; //Haetaan asiakkaan saldo tietokannasta kortin id:n perusteella.
+            QString credentials="1234:4321";
+            QNetworkRequest request((site_url));
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            QByteArray data = credentials.toLocal8Bit().toBase64();
+            QString headerData = "Basic " + data;
+            request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+
+            getManager = new QNetworkAccessManager(this);
+            connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getSaldoSlot(QNetworkReply*)));
+            replysaldo = getManager->get(request);
+
+    }
+    else if (response_dataKorttityyppi == "credit") {
+        QString site_url="http://localhost:3000/luottoraja/"+korttiID; //Haetaan asiakkaan luottoraja tietokannasta kortin id:n perusteella.
+            QString credentials="1234:4321";
+            QNetworkRequest request((site_url));
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            QByteArray data = credentials.toLocal8Bit().toBase64();
+            QString headerData = "Basic " + data;
+            request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+
+            getManager = new QNetworkAccessManager(this);
+            connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getLuottorajaSlot(QNetworkReply*)));
+            replysaldo = getManager->get(request);
+
+    }
+
+}
+
+void consoleMain::getAsiakastiedot(const QString &asiakastiedot) //Vastaanottaa mainwindowsta tulevan tiedon ja näyttää sen tekstikentässä.
+{
+    asiakkaanTiedot = asiakastiedot;;
+    ui->lineEditAsiakastiedot->setText(asiakkaanTiedot);
 }
 
 void consoleMain::on_btnKirjauduUlos_clicked()
