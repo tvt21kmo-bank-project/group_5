@@ -11,7 +11,7 @@ consolePassword::consolePassword(QWidget *parent) :
     credebManager = new QNetworkAccessManager;
     connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlotFast()));
     connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
-
+    connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
 }
 
 consolePassword::~consolePassword()
@@ -125,6 +125,19 @@ void consolePassword::on_btnOK_clicked()
     loginManager = new QNetworkAccessManager(this);
     connect(loginManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
     reply = loginManager->post(request, QJsonDocument(json).toJson());
+
+    QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+cardID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
+    QString credentialsAsiakastiedot="1234:4321";
+    QNetworkRequest requestAsiakastiedot((site_urlAsiakastiedot));
+    requestAsiakastiedot.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray dataAsiakastiedot = credentialsAsiakastiedot.toLocal8Bit().toBase64();
+    QString headerDataAsiakastiedot = "Basic " + dataAsiakastiedot;
+    requestAsiakastiedot.setRawHeader( "Authorization", headerDataAsiakastiedot.toLocal8Bit() );
+
+    asiakastiedotManager = new QNetworkAccessManager(this);
+    connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
+    replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
+    //qDebug()<< replyAsiakastiedot;
 }
 
 void consolePassword::loginSlot(QNetworkReply *reply)
@@ -168,4 +181,20 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
       }
 }
+
+void consolePassword::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
+{
+    response_dataAsiakastiedot=replyAsiakastiedot->readAll();
+    QJsonDocument json_doc = QJsonDocument::fromJson(response_dataAsiakastiedot);
+    QJsonArray json_array = json_doc.array();
+    QString asiakastiedot;
+    foreach (const QJsonValue &value, json_array) {
+       QJsonObject json_obj = value.toObject();
+       asiakastiedot+=QString::fromLatin1(" Tervetuloa ")+json_obj["etunimi_asiakas"].toString()+" "+json_obj["sukunimi_asiakas"].toString()+"\r";
+       //qDebug() << asiakastiedot;
+}
+    emit sendAsiakastiedot(asiakastiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
+    //replyAsiakastiedot->deleteLater();
+}
+
 
