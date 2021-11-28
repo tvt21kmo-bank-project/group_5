@@ -23,22 +23,24 @@ public:
 signals:
     void signalID(const QString &);
     void sendSaldo(const QString &);
+    void signalValinta(const QString &);
+    void sendAsiakastiedot(const QString &);
 
 private slots:
     void on_btnDebit_clicked();
     void on_btnCredit_clicked();
     void slotCardID(const QString &);
-   void getSaldoSlot(QNetworkReply *);
-   void getLuottorajaSlot(QNetworkReply *);
+    void getSaldoSlot(QNetworkReply *);
+    void getLuottorajaSlot(QNetworkReply *);
+    void getAsiakastiedotSlot(QNetworkReply *);
 
 private:
     Ui::consoleCreditDebit *ui;
     QString korttiID;
     consoleMain *objConMain;
-    QNetworkAccessManager *getManager, *getManager1;
-    QNetworkReply *replysaldo;
-    QNetworkReply *replyLuottoraja;
-    QByteArray response_data, response_data1;
+    QNetworkAccessManager *getManager, *getManager1, *asiakastiedotManager;
+    QNetworkReply *replysaldo, *replyLuottoraja, *replyAsiakastiedot;
+    QByteArray response_data, response_data1, response_dataAsiakastiedot;
     consoleSaldo *objConSaldo;
 };
 

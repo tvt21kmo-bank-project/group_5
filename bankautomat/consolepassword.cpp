@@ -137,7 +137,7 @@ void consolePassword::on_btnOK_clicked()
     asiakastiedotManager = new QNetworkAccessManager(this);
     connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
     replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
-    //qDebug()<< replyAsiakastiedot;
+
 }
 
 void consolePassword::loginSlot(QNetworkReply *reply)
@@ -190,10 +190,10 @@ void consolePassword::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
     foreach (const QJsonValue &value, json_array) {
        QJsonObject json_obj = value.toObject();
        asiakastiedot+=QString::fromLatin1(" Tervetuloa ")+json_obj["etunimi_asiakas"].toString()+" "+json_obj["sukunimi_asiakas"].toString()+"\r";
-       //qDebug() << asiakastiedot;
+
 }
     emit sendAsiakastiedot(asiakastiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
-    //replyAsiakastiedot->deleteLater();
+
 }
 
 
