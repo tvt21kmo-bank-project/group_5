@@ -23,6 +23,7 @@ public:
 signals:
     void signalID(const QString &);
     void sendSaldo(const QString &);
+    void signalValinta(const QString &);
 
 private slots:
     void on_btnDebit_clicked();
@@ -33,7 +34,7 @@ private slots:
 
 private:
     Ui::consoleCreditDebit *ui;
-    QString korttiID;
+    QString korttiID, valinta;
     consoleMain *objConMain;
     QNetworkAccessManager *getManager, *getManager1;
     QNetworkReply *replysaldo;

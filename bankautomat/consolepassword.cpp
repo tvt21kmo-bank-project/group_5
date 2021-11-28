@@ -157,7 +157,6 @@ void consolePassword::loginSlot(QNetworkReply *reply)
      } else {
          qDebug() << "Väärä PIN";
      }
-    // reply->deleteLater(); tätä ei saa olla !!!
 }
 
 void consolePassword::credebSlot(QNetworkReply *reply)

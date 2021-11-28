@@ -8,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     objConPass = new consolePassword;
     objConMain = new consoleMain;
-   // connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlot()));
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
 }
 
@@ -20,17 +19,6 @@ MainWindow::~MainWindow()
 
     delete objConMain;
     objConMain = nullptr;
-}
-
-
-void MainWindow::on_btnKirjaudu_clicked()
-{
-    emit signalKirjaudu();
-}
-
-void MainWindow::loginSlot()
-{
-    objConPass->show();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

@@ -14,19 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="btnKirjaudu">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>480</y>
-      <width>141</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Ohita</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btnSeven">
     <property name="geometry">
      <rect>

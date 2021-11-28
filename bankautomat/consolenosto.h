@@ -29,10 +29,12 @@ private slots:
 
 signals:
     void closeWindow();
+    void signalSumma(double);
+    void removConnect();    //poistaa connectit nostossa
 
 private:
     Ui::consoleNosto *ui;
-    int counter;
+    int counter, summa;
 };
 
 #endif // CONSOLENOSTO_H
