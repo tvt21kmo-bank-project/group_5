@@ -30,9 +30,9 @@ private slots:
     void getIDSlot(const QString &);//Kortinnumeron vastaanottaja
     void slotCloseNosto();
     void slotCloseSaldo();
+    void slotCloseTilitapahtumat();
     void timerSlot();
     void slotCardID(const QString &);
-    void slotCloseTilitapahtumat();
     void on_btnNosto_clicked();
     void on_btnTilitapahtumat_clicked();
     void on_btnSaldo_clicked();
@@ -44,7 +44,11 @@ private slots:
     void getYhdistelmaSlotSaldo(const QString &);
     void getYhdistelmaIDSlot(const QString &);
     void getYhdistelmaSlotLuottoraja(const QString &);
-
+    void getKorttityyppiNostoSlot(QNetworkReply*);
+    void slotTyyppiValinta(const QString &);
+    void transferDebit(double);
+    void transferCredit(double);
+    void conRemov();
 signals:
     void closeWindow();
     void sendTilitapahtumat(const QString &);
@@ -63,6 +67,7 @@ private:
     QString saldo;
     QString IDcard;
     QString iiteekortti;
+    QString tyyppiValinta;
     QNetworkAccessManager *getManager;
     QNetworkAccessManager *korttityyppiManager;
     QNetworkReply *replyKorttityyppi;

@@ -24,14 +24,11 @@ public:
     ~MainWindow();
 
 signals:
-    void signalKirjaudu();
     void finished(QNetworkReply*);
     void signalLogin(const QString &);
 
 private slots:
-    void on_btnKirjaudu_clicked(); // for testing purposes
     void checkCardSlot(QNetworkReply *reply);
-    void loginSlot();
     void on_btnZero_clicked();
     void on_btnOne_clicked();
     void on_btnTwo_clicked();
