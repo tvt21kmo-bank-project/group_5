@@ -30,9 +30,9 @@ private slots:
     void getIDSlot(const QString &);//Kortinnumeron vastaanottaja
     void slotCloseNosto();
     void slotCloseSaldo();
+    void slotCloseTilitapahtumat();
     void timerSlot();
     void slotCardID(const QString &);
-    void slotCloseTilitapahtumat();
     void on_btnNosto_clicked();
     void on_btnTilitapahtumat_clicked();
     void on_btnSaldo_clicked();
@@ -46,11 +46,17 @@ private slots:
     void getYhdistelmaSlotLuottoraja(const QString &);
     void getKorttityyppiNostoSlot(QNetworkReply*);
     void slotTyyppiValinta(const QString &);
+<<<<<<< HEAD
     void getYhdistelmaSlotAsiakastiedot(const QString &);
     void transferDebit(double);
     void transferCredit(double);
     void conRemov();
 
+=======
+    void transferDebit(double);
+    void transferCredit(double);
+    void conRemov();
+>>>>>>> a96421aaf5e8e225f9e3ca56fa45a304028f258c
 signals:
     void closeWindow();
     void sendTilitapahtumat(const QString &);

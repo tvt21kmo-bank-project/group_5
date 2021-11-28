@@ -8,7 +8,7 @@ consoleCreditDebit::consoleCreditDebit(QWidget *parent) :
     ui->setupUi(this);
     objConMain = new consoleMain;
     objConSaldo = new consoleSaldo;
-    connect(this,SIGNAL(signalID(const QString &)), objConMain,SLOT(getyhdistelmaIDSlot(const QString &)));
+    connect(this,SIGNAL(signalID(const QString &)), objConMain,SLOT(getYhdistelmaIDSlot(const QString &)));
 
 
 }
@@ -34,6 +34,10 @@ void consoleCreditDebit::on_btnDebit_clicked()
         getManager = new QNetworkAccessManager(this);
         connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getSaldoSlot(QNetworkReply*)));
         replysaldo = getManager->get(request);
+        connect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
+        valinta = "debit";
+        emit signalValinta(valinta);
+        disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
         QString credentialsAsiakastiedot="1234:4321";
@@ -83,6 +87,10 @@ void consoleCreditDebit::on_btnCredit_clicked()
         getManager1 = new QNetworkAccessManager(this);
         connect(getManager1, SIGNAL(finished(QNetworkReply*)), this, SLOT(getLuottorajaSlot(QNetworkReply*)));
         replyLuottoraja = getManager1->get(request1);
+        connect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
+        valinta = "credit";
+        emit signalValinta(valinta);
+        disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
         QString credentialsAsiakastiedot="1234:4321";

@@ -36,7 +36,7 @@ private slots:
 
 private:
     Ui::consoleCreditDebit *ui;
-    QString korttiID;
+    QString korttiID, valinta;
     consoleMain *objConMain;
     QNetworkAccessManager *getManager, *getManager1, *asiakastiedotManager;
     QNetworkReply *replysaldo, *replyLuottoraja, *replyAsiakastiedot;

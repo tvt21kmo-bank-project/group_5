@@ -32,10 +32,11 @@ var loginRouter = require('./routes/login');
 var creditdebitRouter = require('./routes/creditdebit');
 var tapahtumaRouter = require('./routes/tilitapahtumat');
 var saldoRouter = require('./routes/saldo');
+
 var asiakastiedotRouter = require('./routes/asiakastiedot');
 var korttityyppiRouter = require('./routes/korttityyppi');
 var luottorajaRouter = require('./routes/luottoraja');
-var yhdistelmaRouter = require('./routes/yhdistelma');
+var pankkiRouter = require('./routes/pankki');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -52,9 +53,10 @@ app.use('/loginID', loginIDRouter);
 app.use('/login', loginRouter);
 app.use('/creditdebit', creditdebitRouter);
 app.use('/saldo', saldoRouter);
+
 app.use('/asiakastiedot', asiakastiedotRouter);
 app.use('/korttityyppi', korttityyppiRouter);
 app.use('/luottoraja', luottorajaRouter);
-app.use('/yhdistelma', yhdistelmaRouter);
+app.use('/pankki', pankkiRouter);
 
 module.exports = app;
