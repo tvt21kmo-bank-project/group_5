@@ -123,8 +123,6 @@ void consoleMain::slotTyyppiValinta(const QString &valinta)
     qDebug() << "tyyppivalinta" + tyyppiValinta;
 }
 
-
-
 void consoleMain::timerSlot()
 {
     qDebug() << counter;
@@ -304,6 +302,12 @@ void consoleMain::getKorttityyppiSlot(QNetworkReply *replyKorttityyppi)
 void consoleMain::getAsiakastiedot(const QString &asiakastiedot) //Vastaanottaa mainwindowsta tulevan tiedon ja näyttää sen tekstikentässä.
 {
     asiakkaanTiedot = asiakastiedot;;
+    ui->lineEditAsiakastiedot->setText(asiakkaanTiedot);
+}
+
+void consoleMain::getYhdistelmaSlotAsiakastiedot(const QString &asiakkaantiedot)
+{
+    asiakkaanTiedot=asiakkaantiedot;
     ui->lineEditAsiakastiedot->setText(asiakkaanTiedot);
 }
 

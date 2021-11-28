@@ -39,6 +39,18 @@ void consoleCreditDebit::on_btnDebit_clicked()
         emit signalValinta(valinta);
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
+        QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
+        QString credentialsAsiakastiedot="1234:4321";
+        QNetworkRequest requestAsiakastiedot((site_urlAsiakastiedot));
+        requestAsiakastiedot.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        QByteArray dataAsiakastiedot = credentialsAsiakastiedot.toLocal8Bit().toBase64();
+        QString headerDataAsiakastiedot = "Basic " + dataAsiakastiedot;
+        requestAsiakastiedot.setRawHeader( "Authorization", headerDataAsiakastiedot.toLocal8Bit() );
+
+        asiakastiedotManager = new QNetworkAccessManager(this);
+        connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
+        replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
+
     objConMain->show();
     this->close();
 
@@ -80,6 +92,18 @@ void consoleCreditDebit::on_btnCredit_clicked()
         emit signalValinta(valinta);
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
+        QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
+        QString credentialsAsiakastiedot="1234:4321";
+        QNetworkRequest requestAsiakastiedot((site_urlAsiakastiedot));
+        requestAsiakastiedot.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        QByteArray dataAsiakastiedot = credentialsAsiakastiedot.toLocal8Bit().toBase64();
+        QString headerDataAsiakastiedot = "Basic " + dataAsiakastiedot;
+        requestAsiakastiedot.setRawHeader( "Authorization", headerDataAsiakastiedot.toLocal8Bit() );
+
+        asiakastiedotManager = new QNetworkAccessManager(this);
+        connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
+        replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
+
     objConMain->show();
     this->close();
 }
@@ -105,4 +129,18 @@ void consoleCreditDebit::slotCardID(const QString &id)
     qDebug() << id;
 }
 
+void consoleCreditDebit::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
+{
+    response_dataAsiakastiedot=replyAsiakastiedot->readAll();
+    QJsonDocument json_doc = QJsonDocument::fromJson(response_dataAsiakastiedot);
+    QJsonArray json_array = json_doc.array();
+    QString asiakkaantiedot;
+    foreach (const QJsonValue &value, json_array) {
+       QJsonObject json_obj = value.toObject();
+       asiakkaantiedot+=QString::fromLatin1(" Tervetuloa ")+json_obj["etunimi_asiakas"].toString()+" "+json_obj["sukunimi_asiakas"].toString()+"\r";
+    connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain,SLOT(getYhdistelmaSlotAsiakastiedot(const QString &)));
+}
+    emit sendAsiakastiedot(asiakkaantiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
+
+}
 

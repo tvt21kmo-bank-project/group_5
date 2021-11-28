@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="btn20e">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>70</y>
+     <x>90</x>
+     <y>100</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="btn200e">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>80</y>
+     <x>450</x>
+     <y>100</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -42,8 +42,8 @@
   <widget class="QPushButton" name="btn60e">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>210</y>
+     <x>90</x>
+     <y>240</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -55,8 +55,8 @@
   <widget class="QPushButton" name="btn40e">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>140</y>
+     <x>90</x>
+     <y>170</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -68,8 +68,8 @@
   <widget class="QPushButton" name="btnMuuSumma">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>200</y>
+     <x>450</x>
+     <y>240</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -81,8 +81,8 @@
   <widget class="QPushButton" name="btn100e">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>280</y>
+     <x>90</x>
+     <y>310</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -94,8 +94,8 @@
   <widget class="QPushButton" name="btn500e">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>140</y>
+     <x>450</x>
+     <y>170</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -107,14 +107,35 @@
   <widget class="QPushButton" name="btnSulje">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>280</y>
+     <x>450</x>
+     <y>310</y>
      <width>111</width>
-     <height>41</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
     <string>Sulje</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>30</y>
+     <width>371</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Valitse nostettava summa</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>
