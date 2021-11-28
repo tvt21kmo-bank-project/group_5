@@ -23,7 +23,6 @@ consoleMain::~consoleMain()
 
     delete objConNosto;
     objConNosto = nullptr;
-    qDebug() << "con main destroyer";
 
     delete objTimer;
     objTimer = nullptr;
