@@ -50,6 +50,8 @@ private slots:
     void transferDebit(double);
     void transferCredit(double);
     void conRemov();
+    void pankkiCreditSlot(QNetworkReply*);
+    void creditVastausSlot(QNetworkReply*);
 
 signals:
     void closeWindow();
@@ -64,20 +66,22 @@ private:
     consoleSaldo *objConSaldo;
     QTimer *objTimer;
     int counter;
+    double siirtosumma;
     QString korttiID;
     QString tilitapahtumat; //Datan välittämistä varten
     QString saldo;
     QString IDcard;
     QString iiteekortti;
     QString tyyppiValinta;
-    QNetworkAccessManager *getManager;
+    QNetworkAccessManager *getManager, *pankkiManager, *creditManager;
     QNetworkAccessManager *korttityyppiManager;
-    QNetworkReply *replyKorttityyppi;
+    QNetworkReply *replyKorttityyppi, *replyData, *creditReply;
     QNetworkReply *replytapahtumat;
     QNetworkReply *replysaldo;
     QByteArray response_data;
     QByteArray response_dataKorttityyppi;
     QString asiakkaanTiedot;
+
 
 };
 
