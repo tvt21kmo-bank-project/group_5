@@ -44,10 +44,10 @@ void consoleMain::getIDSlot(const QString &cardID)
 
 }
 
-void consoleMain::getYhdistelmaIDSlot(const QString &korttiID)
+void consoleMain::getYhdistelmaIDSlot(const QString &kortti)
 {
-    iiteekortti = korttiID;
-    qDebug() <<"asiakkaan id korttityyppivalinnasta" << iiteekortti;
+    korttiID = kortti;
+    qDebug() <<"asiakkaan id korttityyppivalinnasta" << korttiID;
 }
 
 void consoleMain::on_btnNosto_clicked()

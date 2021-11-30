@@ -36,6 +36,7 @@ void consoleCreditDebit::on_btnDebit_clicked()
         replysaldo = getManager->get(request);
         connect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
         valinta = "debit";
+        emit signalID(korttiID);
         emit signalValinta(valinta);
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
@@ -89,6 +90,7 @@ void consoleCreditDebit::on_btnCredit_clicked()
         replyLuottoraja = getManager1->get(request1);
         connect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
         valinta = "credit";
+        emit signalID(korttiID);
         emit signalValinta(valinta);
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
