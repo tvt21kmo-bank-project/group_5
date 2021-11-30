@@ -46,17 +46,15 @@ private slots:
     void getYhdistelmaSlotLuottoraja(const QString &);
     void getKorttityyppiNostoSlot(QNetworkReply*);
     void slotTyyppiValinta(const QString &);
-<<<<<<< HEAD
     void getYhdistelmaSlotAsiakastiedot(const QString &);
     void transferDebit(double);
     void transferCredit(double);
     void conRemov();
+    void pankkiCreditSlot(QNetworkReply*);
+    void creditVastausSlot(QNetworkReply*);
+    void pankkiDebitSlot(QNetworkReply*);
+    void debitVastausSlot(QNetworkReply*);
 
-=======
-    void transferDebit(double);
-    void transferCredit(double);
-    void conRemov();
->>>>>>> a96421aaf5e8e225f9e3ca56fa45a304028f258c
 signals:
     void closeWindow();
     void sendTilitapahtumat(const QString &);
@@ -70,20 +68,23 @@ private:
     consoleSaldo *objConSaldo;
     QTimer *objTimer;
     int counter;
+    double siirtosumma;
     QString korttiID;
     QString tilitapahtumat; //Datan välittämistä varten
     QString saldo;
     QString IDcard;
     QString iiteekortti;
     QString tyyppiValinta;
-    QNetworkAccessManager *getManager;
+    QNetworkAccessManager *getManager, *pankkiCreditManager, *creditManager;
+    QNetworkAccessManager *pankkiDebitManager, *debitManager;
     QNetworkAccessManager *korttityyppiManager;
-    QNetworkReply *replyKorttityyppi;
+    QNetworkReply *replyKorttityyppi, *replyData, *creditReply, *debitReply;
     QNetworkReply *replytapahtumat;
     QNetworkReply *replysaldo;
     QByteArray response_data;
     QByteArray response_dataKorttityyppi;
     QString asiakkaanTiedot;
+
 
 };
 

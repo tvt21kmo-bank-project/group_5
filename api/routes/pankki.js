@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pankki = require('../models/pankki_model');
 
+
 router.get('/:idkortti',
 function(req, res) {
   pankki.getDataTransfer(req.params.idkortti, function(dbError,dbResult) {
@@ -10,7 +11,12 @@ function(req, res) {
         res.send("Haussa tapahtui virhe");
       } else {
         if(dbResult.length > 0) {
-          res.json(dbResult);
+          console.log(dbResult);
+          let tilit = dbResult[0].idtili;
+          let korttit = dbResult[0].idkortti;
+          const transferData = {tilitunnus:tilit, korttitunnus:korttit};
+          const arrData = [transferData];
+          res.json(arrData);
         } else {
           res.json(dbError);
         }

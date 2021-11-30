@@ -23,7 +23,6 @@ consoleMain::~consoleMain()
 
     delete objConNosto;
     objConNosto = nullptr;
-    qDebug() << "con main destroyer";
 
     delete objTimer;
     objTimer = nullptr;
@@ -45,10 +44,10 @@ void consoleMain::getIDSlot(const QString &cardID)
 
 }
 
-void consoleMain::getYhdistelmaIDSlot(const QString &korttiID)
+void consoleMain::getYhdistelmaIDSlot(const QString &kortti)
 {
-    iiteekortti = korttiID;
-    qDebug() <<"asiakkaan id korttityyppivalinnasta" << iiteekortti;
+    korttiID = kortti;
+    qDebug() <<"asiakkaan id korttityyppivalinnasta" << korttiID;
 }
 
 void consoleMain::on_btnNosto_clicked()
@@ -78,7 +77,7 @@ void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply)
 
     if(response_data == "credit") {
         qDebug() << " credit, ei yhdistelma";
-        connect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));
+        connect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));    
     } else if(response_data == "debit") {
         qDebug() << "debit, ei yhdistelma";
         connect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferDebit(double)));
@@ -97,10 +96,57 @@ void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply)
 
 void consoleMain::transferCredit(double summa)
 {
-    qDebug() << "credit " << summa;
+    siirtosumma = summa;
+    qDebug() << "credit " << siirtosumma;
 
-   // disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));
+    QString site_url="http://localhost:3000/pankki/"+korttiID;
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url)); request.setHeader(QNetworkRequest::ContentTypeHeader,
+    "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    pankkiCreditManager = new QNetworkAccessManager(this);
+    connect(pankkiCreditManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(pankkiCreditSlot(QNetworkReply*)));
+    replyData = pankkiCreditManager->get(request);
 
+
+}
+
+void consoleMain::pankkiCreditSlot(QNetworkReply*)
+{
+    response_data=replyData->readAll();
+    QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
+    QJsonArray json_array = json_doc.array();
+    QJsonObject objJson;
+    foreach (const QJsonValue &value, json_array) {
+       objJson = value.toObject();
+       objJson.insert("maara",siirtosumma);
+       qDebug() << objJson;
+    }
+
+    QString site_url="http://localhost:3000/pankki/transfer_credit";
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    creditManager = new QNetworkAccessManager(this);
+    connect(creditManager, SIGNAL(finished(QNetworkReply*)),
+    this, SLOT(creditVastausSlot(QNetworkReply*)));
+    creditReply = creditManager->post(request, QJsonDocument(objJson).toJson());
+}
+
+void consoleMain::creditVastausSlot(QNetworkReply *creditReply)
+{
+    QByteArray responseData = creditReply->readAll();
+    qDebug() << responseData;
+    if (responseData == "1") {
+        qDebug() << "Siirto onnistui";
+    } else {
+        qDebug() << "Siirto epaonnistui";
+    }
 }
 
 void consoleMain::conRemov()
@@ -112,9 +158,55 @@ void consoleMain::conRemov()
 
 void consoleMain::transferDebit(double summa)
 {
-    qDebug() << "debit " << summa;
+    siirtosumma = summa;
+    qDebug() << "debit " << siirtosumma;
 
-   // disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferDebit(double)));
+    QString site_url="http://localhost:3000/pankki/"+korttiID;
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url)); request.setHeader(QNetworkRequest::ContentTypeHeader,
+    "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    pankkiDebitManager = new QNetworkAccessManager(this);
+    connect(pankkiDebitManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(pankkiDebitSlot(QNetworkReply*)));
+    replyData = pankkiDebitManager->get(request);
+}
+
+void consoleMain::pankkiDebitSlot(QNetworkReply*)
+{
+    response_data=replyData->readAll();
+    QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
+    QJsonArray json_array = json_doc.array();
+    QJsonObject objJson;
+    foreach (const QJsonValue &value, json_array) {
+       objJson = value.toObject();
+       objJson.insert("maara",siirtosumma);
+       qDebug() << objJson;
+    }
+
+    QString site_url="http://localhost:3000/pankki/transfer_debit";
+    QString credentials="1234:4321";
+    QNetworkRequest request((site_url));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray data = credentials.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    debitManager = new QNetworkAccessManager(this);
+    connect(debitManager, SIGNAL(finished(QNetworkReply*)),
+    this, SLOT(debitVastausSlot(QNetworkReply*)));
+    debitReply = debitManager->post(request, QJsonDocument(objJson).toJson());
+}
+
+void consoleMain::debitVastausSlot(QNetworkReply *debitReply)
+{
+    QByteArray responseData = debitReply->readAll();
+    qDebug() << responseData;
+    if (responseData == "1") {
+        qDebug() << "Siirto onnistui";
+    } else {
+        qDebug() << "Siirto epaonnistui";
+    }
 }
 
 void consoleMain::slotTyyppiValinta(const QString &valinta)
