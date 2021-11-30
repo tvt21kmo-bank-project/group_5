@@ -52,6 +52,8 @@ private slots:
     void conRemov();
     void pankkiCreditSlot(QNetworkReply*);
     void creditVastausSlot(QNetworkReply*);
+    void pankkiDebitSlot(QNetworkReply*);
+    void debitVastausSlot(QNetworkReply*);
 
 signals:
     void closeWindow();
@@ -73,9 +75,10 @@ private:
     QString IDcard;
     QString iiteekortti;
     QString tyyppiValinta;
-    QNetworkAccessManager *getManager, *pankkiManager, *creditManager;
+    QNetworkAccessManager *getManager, *pankkiCreditManager, *creditManager;
+    QNetworkAccessManager *pankkiDebitManager, *debitManager;
     QNetworkAccessManager *korttityyppiManager;
-    QNetworkReply *replyKorttityyppi, *replyData, *creditReply;
+    QNetworkReply *replyKorttityyppi, *replyData, *creditReply, *debitReply;
     QNetworkReply *replytapahtumat;
     QNetworkReply *replysaldo;
     QByteArray response_data;

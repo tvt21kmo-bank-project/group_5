@@ -14,15 +14,8 @@ function(req, res) {
           console.log(dbResult);
           let tilit = dbResult[0].idtili;
           let korttit = dbResult[0].idkortti;
-          console.log(tilit);
-          console.log(korttit);
-          //const transferData = [tilit,korttit];
           const transferData = {tilitunnus:tilit, korttitunnus:korttit};
-          const arrData = [transferData]
-          console.log(transferData);
-        //  const jsonData = JSON.stringify(transferData);
-          console.log(arrData);
-
+          const arrData = [transferData];
           res.json(arrData);
         } else {
           res.json(dbError);
