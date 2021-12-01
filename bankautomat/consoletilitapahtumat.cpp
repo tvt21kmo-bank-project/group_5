@@ -19,7 +19,17 @@ void consoleTilitapahtumat::getDataSlot(const QString &tilitapahtumat)
 {
     tapahtumat = tilitapahtumat; //Käytössä koko oliossa
     qDebug()<<"Asiakkaan tilitapahtumat" << tapahtumat;
-    ui->lineEditTapahtumat->setText(tapahtumat); //printataan tilitapahtumiin
+    QString omistaja;
+    omistaja = tapahtumat.section(',',3,4); //pilkotaan merkkijonosta omistaja
+    omistaja.replace(QString(","), QString(" ")); //vaihdetaan pilkut välilyönneiksi
+    tapahtumat.replace(QString (","), QString(" "));
+    tapahtumat.remove(omistaja);
+    QString x=" Tilin omistaja: "; //liitetään merkkijonot yhteen
+    x.append(omistaja);
+
+    qDebug()<<omistaja;
+    ui->lineEditTapahtumat->setText(x); //printataan tilinomistaja
+    ui->textEditTapahtumat->setText(tapahtumat); //printataan tilitapahtumat
 
 }
 
