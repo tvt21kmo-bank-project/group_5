@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     consolecreditdebit.cpp \
     consolemain.cpp \
+    consolemuusumma.cpp \
     consolenosto.cpp \
     consolepassword.cpp \
     consolesaldo.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
 HEADERS += \
     consolecreditdebit.h \
     consolemain.h \
+    consolemuusumma.h \
     consolenosto.h \
     consolepassword.h \
     consolesaldo.h \
@@ -30,6 +32,7 @@ HEADERS += \
 FORMS += \
     consolecreditdebit.ui \
     consolemain.ui \
+    consolemuusumma.ui \
     consolenosto.ui \
     consolepassword.ui \
     consolesaldo.ui \

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDebug>
+#include "consolemuusumma.h"
 
 namespace Ui {
 class consoleNosto;
@@ -26,6 +27,8 @@ private slots:
     void on_btnMuuSumma_clicked();
     void on_btnSulje_clicked();
     void timerSlot();
+    void receiverMuusumma(double);
+    void resetCounter(int);
 
 signals:
     void closeWindow();
@@ -34,6 +37,7 @@ signals:
 
 private:
     Ui::consoleNosto *ui;
+    consoleMuuSumma *objConMuuSumma;
     int counter, summa;
 };
 

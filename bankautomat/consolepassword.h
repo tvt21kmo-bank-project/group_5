@@ -36,8 +36,6 @@ private slots:
     void loginSlot(QNetworkReply *reply);
     void credebSlot(QNetworkReply * reply);
     void getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot);
-    void loginSlotFast();
-    void on_btnKirjaudu_clicked(); // for testing purposes
     void on_btnZero_clicked();
     void on_btnOne_clicked();
     void on_btnTwo_clicked();
