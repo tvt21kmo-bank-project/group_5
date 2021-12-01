@@ -7,11 +7,16 @@ consoleNosto::consoleNosto(QWidget *parent) :
 {
     ui->setupUi(this);
     counter = 0;
+    objConMuuSumma = new consoleMuuSumma;
+    connect(objConMuuSumma, SIGNAL(signalReset(int)), this, SLOT(resetCounter(int)));
+    connect(objConMuuSumma, SIGNAL(signalSumma(double)), this, SLOT(receiverMuusumma(double)));
 }
 
 consoleNosto::~consoleNosto()
 {
     delete ui;
+    delete objConMuuSumma;
+    objConMuuSumma = nullptr;
 }
 
 void consoleNosto::on_btn20e_clicked()
@@ -65,6 +70,7 @@ void consoleNosto::on_btn500e_clicked()
 void consoleNosto::on_btnMuuSumma_clicked()
 {
     counter = 0;
+    objConMuuSumma->show();
 }
 
 
@@ -84,5 +90,16 @@ void consoleNosto::timerSlot()
         emit closeWindow();
         emit removConnect();
     }
+}
+
+void consoleNosto::receiverMuusumma(double maara)
+{
+    summa = maara;
+    emit signalSumma(summa);
+}
+
+void consoleNosto::resetCounter(int luku)
+{
+    counter = luku;
 }
 

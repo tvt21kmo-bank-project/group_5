@@ -9,7 +9,6 @@ consolePassword::consolePassword(QWidget *parent) :
     objConMain = new consoleMain;
     objCredeb = new consoleCreditDebit;
     credebManager = new QNetworkAccessManager;
-    connect(this, SIGNAL(signalKirjaudu()), this, SLOT(loginSlotFast()));
     connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
 }
@@ -31,16 +30,6 @@ void consolePassword::connectingSlot(const QString &IDcard)
     cardID = IDcard;
     qDebug() << "asiakkaan ID paaswordissä" << cardID;
 
-}
-
-void consolePassword::on_btnKirjaudu_clicked()
-{
-     emit signalKirjaudu();
-}
-
-void consolePassword::loginSlotFast()
-{
-    objConMain->show();
 }
 
 void consolePassword::on_btnZero_clicked()
