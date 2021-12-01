@@ -283,7 +283,7 @@ void consoleMain::getTapahtumatSlot(QNetworkReply*)
     QString tilitapahtumat;
     foreach (const QJsonValue &value, json_array) {
        QJsonObject json_obj = value.toObject();
-       tilitapahtumat+=QString::number(json_obj["summa"].toInt())+"€ "+json_obj["tapahtuma"].toString()+" "+json_obj["date"].toString()+" Tilin omistaja: "+json_obj["etunimi_asiakas"].toString()+" "+json_obj["sukunimi_asiakas"].toString()+"\r";
+       tilitapahtumat+=QString::number(json_obj["summa"].toInt())+"€"+","+json_obj["tapahtuma"].toString()+","+json_obj["date"].toString()+","+json_obj["etunimi_asiakas"].toString()+","+json_obj["sukunimi_asiakas"].toString()+","+"\r";
        //Qstring tyyppinen olio datan esittämistä varten tilitapahtumissa
     }
     qDebug() << "Tilitapahtumat: "<< tilitapahtumat;
