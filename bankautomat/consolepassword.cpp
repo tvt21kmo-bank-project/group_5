@@ -9,8 +9,12 @@ consolePassword::consolePassword(QWidget *parent) :
     objConMain = new consoleMain;
     objCredeb = new consoleCreditDebit;
     credebManager = new QNetworkAccessManager;
+    objTimer = new QTimer;
     connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
+    connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
+    connect(objCredeb, SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
+    connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
 }
 
 consolePassword::~consolePassword()
@@ -157,7 +161,8 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           qDebug() << "Credit/Debit ominaisuus";
           connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
           emit sendID(cardID);
-          connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
+          disconnect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
+          objTimer->start(1000);
           objCredeb->show();
           this->close();
       } else if(response_data == "false") {
@@ -183,6 +188,16 @@ void consolePassword::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
 }
     emit sendAsiakastiedot(asiakastiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
 
+}
+
+void consolePassword::slotStopTimer()
+{
+    objTimer->stop();
+}
+
+void consolePassword::slotCloseWindow()
+{
+    objCredeb->close();
 }
 
 

@@ -9,7 +9,7 @@ consoleCreditDebit::consoleCreditDebit(QWidget *parent) :
     objConMain = new consoleMain;
     objConSaldo = new consoleSaldo;
     connect(this,SIGNAL(signalID(const QString &)), objConMain,SLOT(getYhdistelmaIDSlot(const QString &)));
-
+    counter = 0;
 
 }
 
@@ -38,6 +38,8 @@ void consoleCreditDebit::on_btnDebit_clicked()
         valinta = "debit";
         emit signalID(korttiID);
         emit signalValinta(valinta);
+        emit stopTimer();
+        counter = 0;
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
@@ -92,6 +94,8 @@ void consoleCreditDebit::on_btnCredit_clicked()
         valinta = "credit";
         emit signalID(korttiID);
         emit signalValinta(valinta);
+        emit stopTimer();
+        counter = 0;
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
@@ -144,5 +148,16 @@ void consoleCreditDebit::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
 }
     emit sendAsiakastiedot(asiakkaantiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
 
+}
+
+void consoleCreditDebit::timerSlot()
+{
+    qDebug() << counter;
+    counter++;
+    if(counter == 10) {
+        counter = 0;
+        emit stopTimer();
+        emit closeWindow();
+    }
 }
 
