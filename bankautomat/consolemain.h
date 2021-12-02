@@ -60,6 +60,8 @@ signals:
     void sendTilitapahtumat(const QString &);
     void finished(QNetworkReply*);
     void sendSaldo(const QString &);
+    void signalIlmoitaKate();
+    void signalRahatTulossa();
 
 private:
     Ui::consoleMain *ui;

@@ -7,9 +7,11 @@ consoleNosto::consoleNosto(QWidget *parent) :
 {
     ui->setupUi(this);
     counter = 0;
+    objTimer = new QTimer;
     objConMuuSumma = new consoleMuuSumma;
     connect(objConMuuSumma, SIGNAL(signalReset(int)), this, SLOT(resetCounter(int)));
     connect(objConMuuSumma, SIGNAL(signalSumma(double)), this, SLOT(receiverMuusumma(double)));
+    connect(objTimer, SIGNAL(timeout()), this, SLOT(removText()));
 }
 
 consoleNosto::~consoleNosto()
@@ -101,5 +103,24 @@ void consoleNosto::receiverMuusumma(double maara)
 void consoleNosto::resetCounter(int luku)
 {
     counter = luku;
+}
+
+void consoleNosto::slotKate()
+{
+    ui->textEditKate->setText("Kate ei riitä");
+    objTimer->start(3000);
+
+}
+
+void consoleNosto::removText()
+{
+    ui->textEditKate->clear();
+    objTimer->stop();
+}
+
+void consoleNosto::rahatTulossa()
+{
+    ui->textEditKate->setText("Rahat tulossa, odota...");
+    objTimer->start(3000);
 }
 
