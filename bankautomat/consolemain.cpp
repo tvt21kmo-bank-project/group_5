@@ -14,6 +14,8 @@ consoleMain::consoleMain(QWidget *parent) :
     connect(this, SIGNAL(sendTilitapahtumat(const QString &)), objConTilitapahtumat, SLOT(getDataSlot(const QString &)));
     connect(this, SIGNAL(sendSaldo(const QString &)), objConSaldo,SLOT(getSaldo(const QString &)));
     connect(objConNosto, SIGNAL(removConnect()), this, SLOT(conRemov()));
+    connect(this, SIGNAL(signalIlmoitaKate()), objConNosto, SLOT(slotKate()));
+    connect(this, SIGNAL(signalRahatTulossa()), objConNosto, SLOT(rahatTulossa()));
 }
 
 
@@ -143,8 +145,10 @@ void consoleMain::creditVastausSlot(QNetworkReply *creditReply)
     QByteArray responseData = creditReply->readAll();
     qDebug() << responseData;
     if (responseData == "1") {
+        emit signalRahatTulossa();
         qDebug() << "Siirto onnistui";
     } else {
+        emit signalIlmoitaKate();
         qDebug() << "Siirto epaonnistui";
     }
 }
@@ -203,8 +207,10 @@ void consoleMain::debitVastausSlot(QNetworkReply *debitReply)
     QByteArray responseData = debitReply->readAll();
     qDebug() << responseData;
     if (responseData == "1") {
+        emit signalRahatTulossa();
         qDebug() << "Siirto onnistui";
     } else {
+        emit signalIlmoitaKate();
         qDebug() << "Siirto epaonnistui";
     }
 }

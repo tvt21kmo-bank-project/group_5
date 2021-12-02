@@ -48,15 +48,18 @@ private slots:
     void on_btnNine_clicked();
     void on_btnReset_clicked();
     void on_btnOK_clicked();
+    void slotStopTimer();
+    void slotCloseWindow();
 
 private:
     Ui::consolePassword *ui;
     consoleMain *objConMain;
+    consoleCreditDebit *objCredeb;
+    QTimer *objTimer;
     QNetworkAccessManager *loginManager, *credebManager;
     QNetworkReply *reply;
     QByteArray response_data;
     QString cardID; //Kortinnumeron välittämistä varten
-    consoleCreditDebit *objCredeb;
     QNetworkAccessManager *asiakastiedotManager;
     QNetworkReply *replyAsiakastiedot;
     QByteArray dataAsiakastiedot;
