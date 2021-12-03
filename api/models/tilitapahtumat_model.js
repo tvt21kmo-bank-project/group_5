@@ -11,6 +11,11 @@ const tilitapahtumat = {
         callback
       );
     },
+
+    tapahtumalista: function(tl, callback) {
+      return db.query('call list_tilitapahtumat(?,?)', [tl.id, tl.alkuraja], callback);
+    },
+    
     delete: function(id, callback) {
       return db.query('delete from tilitapahtumat where idtilitapahtumat=?', [id], callback);
     },

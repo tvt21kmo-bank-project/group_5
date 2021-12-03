@@ -16,6 +16,7 @@ consoleMain::consoleMain(QWidget *parent) :
     connect(objConNosto, SIGNAL(removConnect()), this, SLOT(conRemov()));
     connect(this, SIGNAL(signalIlmoitaKate()), objConNosto, SLOT(slotKate()));
     connect(this, SIGNAL(signalRahatTulossa()), objConNosto, SLOT(rahatTulossa()));
+    connect(this, SIGNAL(sendIdKortti(const QString &)), objConTilitapahtumat, SLOT(slotKorttiId(const QString &)));
 }
 
 
@@ -52,7 +53,7 @@ void consoleMain::getYhdistelmaIDSlot(const QString &kortti)
     qDebug() <<"asiakkaan id korttityyppivalinnasta" << korttiID;
 }
 
-void consoleMain::on_btnNosto_clicked()
+void consoleMain::on_btnNosto_clicked() //hakee kortin tyypin tietokannasta ja käynnistää timerin ja avaa nosto ikkunan
 {
     QString site_urlKorttityyppi="http://localhost:3000/korttityyppi/"+korttiID;
     QString credentialsKorttityyppi="1234:4321";
@@ -73,7 +74,7 @@ void consoleMain::on_btnNosto_clicked()
     this->hide();
 }
 
-void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply)
+void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply) // yhdistää korttityypin mukaan proceduuriin
 {
     QByteArray response_data = reply->readAll();
 
@@ -96,7 +97,7 @@ void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply)
     }
 }
 
-void consoleMain::transferCredit(double summa)
+void consoleMain::transferCredit(double summa) // hakee tiedot pankkisiirto creditin mukaan
 {
     siirtosumma = summa;
     qDebug() << "credit " << siirtosumma;
@@ -115,7 +116,7 @@ void consoleMain::transferCredit(double summa)
 
 }
 
-void consoleMain::pankkiCreditSlot(QNetworkReply*)
+void consoleMain::pankkiCreditSlot(QNetworkReply*) // sijoittaa haettuun olioon valitun määrän ja lähettää proceduuriin
 {
     response_data=replyData->readAll();
     QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
@@ -140,7 +141,7 @@ void consoleMain::pankkiCreditSlot(QNetworkReply*)
     creditReply = creditManager->post(request, QJsonDocument(objJson).toJson());
 }
 
-void consoleMain::creditVastausSlot(QNetworkReply *creditReply)
+void consoleMain::creditVastausSlot(QNetworkReply *creditReply) // ilmoittaa onko siirto onnistunut
 {
     QByteArray responseData = creditReply->readAll();
     qDebug() << responseData;
@@ -160,7 +161,7 @@ void consoleMain::conRemov()
      qDebug() << "disc toimii!";
 }
 
-void consoleMain::transferDebit(double summa)
+void consoleMain::transferDebit(double summa) // hakee tiedot pankkisiirto debitin mukaan
 {
     siirtosumma = summa;
     qDebug() << "debit " << siirtosumma;
@@ -177,7 +178,7 @@ void consoleMain::transferDebit(double summa)
     replyData = pankkiDebitManager->get(request);
 }
 
-void consoleMain::pankkiDebitSlot(QNetworkReply*)
+void consoleMain::pankkiDebitSlot(QNetworkReply*) // sijoittaa haettuun olioon valitun määrän ja lähettää proceduuriin
 {
     response_data=replyData->readAll();
     QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
@@ -202,7 +203,7 @@ void consoleMain::pankkiDebitSlot(QNetworkReply*)
     debitReply = debitManager->post(request, QJsonDocument(objJson).toJson());
 }
 
-void consoleMain::debitVastausSlot(QNetworkReply *debitReply)
+void consoleMain::debitVastausSlot(QNetworkReply *debitReply) // ilmoittaa onko siirto onnistunut
 {
     QByteArray responseData = debitReply->readAll();
     qDebug() << responseData;
@@ -221,7 +222,7 @@ void consoleMain::slotTyyppiValinta(const QString &valinta)
     qDebug() << "tyyppivalinta" + tyyppiValinta;
 }
 
-void consoleMain::timerSlot()
+void consoleMain::timerSlot() // timeri ikkunan sulkemiseen
 {
     qDebug() << counter;
     counter++;
@@ -275,6 +276,7 @@ void consoleMain::on_btnTilitapahtumat_clicked()
     objConTilitapahtumat->show();
 
     counter = 0;
+    emit sendIdKortti(korttiID);
     connect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     connect(objConTilitapahtumat, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));
     objTimer->start(1000);
