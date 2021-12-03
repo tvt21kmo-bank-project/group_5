@@ -50,12 +50,14 @@ private slots:
     void on_btnOK_clicked();
     void slotStopTimer();
     void slotCloseWindow();
+    void slotCloseConsoleMain();
+    void startTimerSlot();
 
 private:
     Ui::consolePassword *ui;
     consoleMain *objConMain;
     consoleCreditDebit *objCredeb;
-    QTimer *objTimer;
+    QTimer *objTimer, *objTimeri;
     QNetworkAccessManager *loginManager, *credebManager;
     QNetworkReply *reply;
     QByteArray response_data;

@@ -72,6 +72,7 @@ void consoleMain::on_btnNosto_clicked() //hakee kortin tyypin tietokannasta ja k
     connect(objConNosto, SIGNAL(closeWindow()), this, SLOT(slotCloseNosto()));
     objTimer->start(1000);
     this->hide();
+    emit stopTimer();
 }
 
 void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply) // yhdistää korttityypin mukaan proceduuriin
@@ -228,7 +229,9 @@ void consoleMain::timerSlot() // timeri ikkunan sulkemiseen
     counter++;
     if(counter == 10){
         counter = 0;
+        emit startTimer();
         emit closeWindow();
+
     }
 }
 
@@ -243,6 +246,7 @@ void consoleMain::slotCloseNosto()
     disconnect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
     objConNosto->close();
     this->show();
+    emit startTimer();
 }
 
 void consoleMain::slotCloseTilitapahtumat()
@@ -250,6 +254,7 @@ void consoleMain::slotCloseTilitapahtumat()
     disconnect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     objConTilitapahtumat->close();
     this->show();
+    emit startTimer();
 }
 
 void consoleMain::slotCloseSaldo()
@@ -258,6 +263,7 @@ void consoleMain::slotCloseSaldo()
     disconnect(objTimer, SIGNAL(timeout()), objConSaldo, SLOT(timerSlot()));
     objConSaldo->close();
     this->show();
+    emit startTimer();
 }
 
 void consoleMain::on_btnTilitapahtumat_clicked()
@@ -276,6 +282,7 @@ void consoleMain::on_btnTilitapahtumat_clicked()
     objConTilitapahtumat->show();
 
     counter = 0;
+    emit stopTimer();
     emit sendIdKortti(korttiID);
     connect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     connect(objConTilitapahtumat, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));
@@ -357,6 +364,7 @@ void consoleMain::on_btnSaldo_clicked()
     objConSaldo->show();
 
     counter = 0;
+    emit stopTimer();
     connect(objTimer, SIGNAL(timeout()), objConSaldo, SLOT(timerSlot()));
     connect(objConSaldo, SIGNAL(closeWindow()), this, SLOT(slotCloseSaldo()));
     objTimer->start(1000);
@@ -414,8 +422,18 @@ void consoleMain::getYhdistelmaSlotAsiakastiedot(const QString &asiakkaantiedot)
 void consoleMain::on_btnKirjauduUlos_clicked()
 {
     this->close();
+    counter = 0;
+    emit stopTimer();
     disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferDebit(double)));
     disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));
 }
-
-
+void consoleMain::timer30Slot()
+{
+    qDebug() << counter;
+    counter++;
+    if(counter == 30){
+        counter = 0;
+        emit stopTimer();
+        emit closeMainWindow();
+}
+}
