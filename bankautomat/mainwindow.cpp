@@ -94,7 +94,7 @@ void MainWindow::on_btnReset_clicked()
 }
 
 
-void MainWindow::on_btnOK_clicked()
+void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
 {
     QJsonObject json;
     QString idkortti = ui->lineEditID->text();
@@ -113,7 +113,7 @@ void MainWindow::on_btnOK_clicked()
     reply = checkCardManager->get(request);
 }
 
-void MainWindow::checkCardSlot(QNetworkReply *reply)
+void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
 {
     QByteArray response_data=reply->readAll();
       qDebug() << response_data;
@@ -123,6 +123,8 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)
           emit signalLogin(IDcard);
           ui->lineEditID->clear(); //Tyhjennetään ID-kenttä ja avataan PIN-kenttä
           objConPass->show();
+      } else {
+          qDebug() << "Virheellinen kortti";
       }
 }
 

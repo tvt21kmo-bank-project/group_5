@@ -1,0 +1,16 @@
+USE `bankdb`;
+DROP procedure IF EXISTS `list_tilitapahtumat`;
+
+DELIMITER $$
+USE `bankdb`$$
+CREATE PROCEDURE `list_tilitapahtumat`(IN id INT, IN alkuraja INT)
+BEGIN
+select summa, tapahtuma, date, etunimi_asiakas, sukunimi_asiakas from tilitapahtumat  
+left join tili on tilitapahtumat.tili_idTili=tili.idtili 
+left join kortti on tili.idtili=kortti.tili_idtili 
+left join asiakas on kortti.asiakas_idasiakas=asiakas.idasiakas 
+where kortti.idkortti = id
+limit alkuraja, 10;
+END$$
+
+DELIMITER ;

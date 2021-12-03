@@ -83,7 +83,7 @@ void consoleNosto::on_btnSulje_clicked()
     emit removConnect();
 }
 
-void consoleNosto::timerSlot()
+void consoleNosto::timerSlot() // counter ajastin ikkunalle
 {
     qDebug() << counter;
     counter++;
@@ -94,7 +94,7 @@ void consoleNosto::timerSlot()
     }
 }
 
-void consoleNosto::receiverMuusumma(double maara)
+void consoleNosto::receiverMuusumma(double maara) // vastaanottaa ja lähettää näppäillyn nostomäärän
 {
     summa = maara;
     emit signalSumma(summa);

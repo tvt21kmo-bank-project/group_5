@@ -62,6 +62,7 @@ signals:
     void sendSaldo(const QString &);
     void signalIlmoitaKate();
     void signalRahatTulossa();
+    void sendIdKortti(const QString &);
 
 private:
     Ui::consoleMain *ui;

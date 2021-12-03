@@ -92,7 +92,7 @@ void consoleMuuSumma::on_btnReset_clicked()
 }
 
 
-void consoleMuuSumma::on_btnOK_clicked()
+void consoleMuuSumma::on_btnOK_clicked() //tarkistaa luvun vastaavan setelirahaa
 {
     emit signalReset(counter);
     strluku = ui->lineEditMaara->text();
