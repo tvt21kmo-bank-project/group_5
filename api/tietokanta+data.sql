@@ -81,6 +81,7 @@ CREATE TABLE `kortti` (
   `pinkoodi` varchar(255) NOT NULL,
   `tili_idtili` int NOT NULL,
   `asiakas_idasiakas` int NOT NULL,
+  `korttilukittu`int NOT NULL,
   PRIMARY KEY (`idkortti`,`tili_idtili`,`asiakas_idasiakas`),
   KEY `fk_Kortti_Tili1_idx` (`tili_idtili`),
   CONSTRAINT `fk_Kortti_Tili1` FOREIGN KEY (`tili_idtili`) REFERENCES `tili` (`idtili`)
@@ -93,7 +94,7 @@ CREATE TABLE `kortti` (
 
 LOCK TABLES `kortti` WRITE;
 /*!40000 ALTER TABLE `kortti` DISABLE KEYS */;
-INSERT INTO `kortti` VALUES (1,'$2a$10$tK6Mj1Z7o5EdvWv/1JSB..9czE3Sr/4niFcfRWQ07R2oa51CGcpjK',1,1),(2,'$2a$10$wcY0pSi04e48AcSkJ6uUx.JLoMvnNjW5JX8kL/AflEGnI2u6DUFym',2,2),(3,'$2a$10$H0zOsigCLUrU/l4qL1ic8urX4b2iGEG46gW0Lr2LCRtZAGL0GDZV6',3,3),(4,'$2a$10$NcwdE.BJAMCNmuR0HPhcaOr/y8PL9diWU0ZYGPkMgPUKQixI3EIOa',4,4),(5,'$2a$10$Fk6LmJNkzKbacbwQPfzxGeUkpi/tQlc6etJi1WSMXXxwZuA97hvMC',5,4);
+INSERT INTO `kortti` VALUES (1,'$2a$10$tK6Mj1Z7o5EdvWv/1JSB..9czE3Sr/4niFcfRWQ07R2oa51CGcpjK',1,1,0),(2,'$2a$10$wcY0pSi04e48AcSkJ6uUx.JLoMvnNjW5JX8kL/AflEGnI2u6DUFym',2,2,0),(3,'$2a$10$H0zOsigCLUrU/l4qL1ic8urX4b2iGEG46gW0Lr2LCRtZAGL0GDZV6',3,3,0),(4,'$2a$10$NcwdE.BJAMCNmuR0HPhcaOr/y8PL9diWU0ZYGPkMgPUKQixI3EIOa',4,4,0),(5,'$2a$10$Fk6LmJNkzKbacbwQPfzxGeUkpi/tQlc6etJi1WSMXXxwZuA97hvMC',5,4,0);
 /*!40000 ALTER TABLE `kortti` ENABLE KEYS */;
 UNLOCK TABLES;
 
