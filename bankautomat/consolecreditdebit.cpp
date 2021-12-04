@@ -9,7 +9,7 @@ consoleCreditDebit::consoleCreditDebit(QWidget *parent) :
     objConMain = new consoleMain;
     objConSaldo = new consoleSaldo;
     connect(this,SIGNAL(signalID(const QString &)), objConMain,SLOT(getYhdistelmaIDSlot(const QString &)));
-
+    counter = 0;
 
 }
 
@@ -20,7 +20,7 @@ consoleCreditDebit::~consoleCreditDebit()
     objConMain = nullptr;
 }
 
-void consoleCreditDebit::on_btnDebit_clicked()
+void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyyppivalinnan ja pysäyttää ikkunan sulkevan timerin, sekä hakee asiakastiedot
 {
     qDebug() <<"debit button id" <<korttiID;
     QString site_url="http://localhost:3000/saldo/"+korttiID; //Haetaan asiakkaan saldo tietokannasta kortin id:n perusteella.
@@ -38,6 +38,8 @@ void consoleCreditDebit::on_btnDebit_clicked()
         valinta = "debit";
         emit signalID(korttiID);
         emit signalValinta(valinta);
+        emit stopTimer();
+        counter = 0;
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
@@ -57,7 +59,7 @@ void consoleCreditDebit::on_btnDebit_clicked()
 
 }
 
-void consoleCreditDebit::getSaldoSlot(QNetworkReply*)
+void consoleCreditDebit::getSaldoSlot(QNetworkReply*) //hakee ja lähettää asiakkaan tiedot saldo ikkunaan
 {
 
         response_data=replysaldo->readAll();
@@ -75,7 +77,7 @@ void consoleCreditDebit::getSaldoSlot(QNetworkReply*)
 
 }
 
-void consoleCreditDebit::on_btnCredit_clicked()
+void consoleCreditDebit::on_btnCredit_clicked()  //lähettää kortin id:n, tyyppivalinnan ja pysäyttää ikkunan sulkevan timerin, sekä hakee asiakastiedot
 {
     QString site_url1="http://localhost:3000/luottoraja/"+korttiID; //Haetaan asiakkaan luottoraja tietokannasta kortin id:n perusteella.
         QString credentials1="1234:4321";
@@ -92,6 +94,8 @@ void consoleCreditDebit::on_btnCredit_clicked()
         valinta = "credit";
         emit signalID(korttiID);
         emit signalValinta(valinta);
+        emit stopTimer();
+        counter = 0;
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
@@ -110,7 +114,7 @@ void consoleCreditDebit::on_btnCredit_clicked()
     this->close();
 }
 
-void consoleCreditDebit::getLuottorajaSlot(QNetworkReply*)
+void consoleCreditDebit::getLuottorajaSlot(QNetworkReply*) // lähettää luottorajan seuraavaan ikkunaan
 {
     response_data1=replyLuottoraja->readAll();
     QJsonDocument json_doc1 = QJsonDocument::fromJson(response_data1);
@@ -125,7 +129,7 @@ void consoleCreditDebit::getLuottorajaSlot(QNetworkReply*)
     emit sendSaldo(luottorajaYhdistelma);
 }
 
-void consoleCreditDebit::slotCardID(const QString &id)
+void consoleCreditDebit::slotCardID(const QString &id) // vastaanottaa kortin id:n
 {
     korttiID = id;
     qDebug() << id;
@@ -144,5 +148,16 @@ void consoleCreditDebit::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
 }
     emit sendAsiakastiedot(asiakkaantiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
 
+}
+
+void consoleCreditDebit::timerSlot() // counter ajastin ikkunalle
+{
+    qDebug() << counter;
+    counter++;
+    if(counter == 10) {
+        counter = 0;
+        emit stopTimer();
+        emit closeWindow();
+    }
 }
 

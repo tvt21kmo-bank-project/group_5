@@ -9,8 +9,17 @@ consolePassword::consolePassword(QWidget *parent) :
     objConMain = new consoleMain;
     objCredeb = new consoleCreditDebit;
     credebManager = new QNetworkAccessManager;
+    objTimer = new QTimer;
+    objTimeri = new QTimer;
     connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
+    connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
+    connect(objCredeb, SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
+    connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
+    connect(objConMain, SIGNAL(closeMainWindow()), this, SLOT(slotCloseConsoleMain()));
+    connect(objConMain,SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
+    connect(objTimeri, SIGNAL(timeout()), objConMain, SLOT(timer30Slot()));
+    connect(objConMain, SIGNAL(startTimer()), this, SLOT(startTimerSlot()));
 }
 
 consolePassword::~consolePassword()
@@ -126,7 +135,8 @@ void consolePassword::on_btnOK_clicked()
     asiakastiedotManager = new QNetworkAccessManager(this);
     connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
     replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
-
+    objTimeri->start(1000); //conmainin timerin aloitus
+    this->close();
 }
 
 void consolePassword::loginSlot(QNetworkReply *reply)
@@ -155,6 +165,8 @@ void consolePassword::loginSlot(QNetworkReply *reply)
                       counterPIN = 0;
                       this->close();
 
+
+         objTimeri->stop();
      }
 }
 }
@@ -196,7 +208,8 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           qDebug() << "Credit/Debit ominaisuus";
           connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
           emit sendID(cardID);
-          connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
+          disconnect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
+          objTimer->start(1000);
           objCredeb->show();
           this->close();
       } else if(response_data == "false") {
@@ -225,4 +238,23 @@ void consolePassword::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
 
 }
 
+void consolePassword::slotStopTimer()
+{
+    objTimer->stop();
+    objTimeri->stop();
+}
+
+void consolePassword::slotCloseWindow()
+{
+    objCredeb->close();
+}
+void consolePassword::slotCloseConsoleMain()
+{
+    objConMain->close();
+}
+
+void consolePassword::startTimerSlot()
+{
+    objTimeri->start(1000);
+}
 

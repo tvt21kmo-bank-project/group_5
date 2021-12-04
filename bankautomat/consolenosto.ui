@@ -138,6 +138,22 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QTextEdit" name="textEditKate">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>100</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

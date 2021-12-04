@@ -25,6 +25,8 @@ signals:
     void sendSaldo(const QString &);
     void signalValinta(const QString &);
     void sendAsiakastiedot(const QString &);
+    void stopTimer();
+    void closeWindow();
 
 private slots:
     void on_btnDebit_clicked();
@@ -33,6 +35,7 @@ private slots:
     void getSaldoSlot(QNetworkReply *);
     void getLuottorajaSlot(QNetworkReply *);
     void getAsiakastiedotSlot(QNetworkReply *);
+    void timerSlot();
 
 private:
     Ui::consoleCreditDebit *ui;
@@ -42,6 +45,7 @@ private:
     QNetworkReply *replysaldo, *replyLuottoraja, *replyAsiakastiedot;
     QByteArray response_data, response_data1, response_dataAsiakastiedot;
     consoleSaldo *objConSaldo;
+    int counter;
 };
 
 #endif // CONSOLECREDITDEBIT_H

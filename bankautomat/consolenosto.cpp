@@ -7,9 +7,11 @@ consoleNosto::consoleNosto(QWidget *parent) :
 {
     ui->setupUi(this);
     counter = 0;
+    objTimer = new QTimer;
     objConMuuSumma = new consoleMuuSumma;
     connect(objConMuuSumma, SIGNAL(signalReset(int)), this, SLOT(resetCounter(int)));
     connect(objConMuuSumma, SIGNAL(signalSumma(double)), this, SLOT(receiverMuusumma(double)));
+    connect(objTimer, SIGNAL(timeout()), this, SLOT(removText()));
 }
 
 consoleNosto::~consoleNosto()
@@ -76,12 +78,13 @@ void consoleNosto::on_btnMuuSumma_clicked()
 
 void consoleNosto::on_btnSulje_clicked()
 {
+   counter = 0;
     this->close();
     emit closeWindow();
     emit removConnect();
 }
 
-void consoleNosto::timerSlot()
+void consoleNosto::timerSlot() // counter ajastin ikkunalle
 {
     qDebug() << counter;
     counter++;
@@ -92,7 +95,7 @@ void consoleNosto::timerSlot()
     }
 }
 
-void consoleNosto::receiverMuusumma(double maara)
+void consoleNosto::receiverMuusumma(double maara) // vastaanottaa ja lähettää näppäillyn nostomäärän
 {
     summa = maara;
     emit signalSumma(summa);
@@ -101,5 +104,24 @@ void consoleNosto::receiverMuusumma(double maara)
 void consoleNosto::resetCounter(int luku)
 {
     counter = luku;
+}
+
+void consoleNosto::slotKate()
+{
+    ui->textEditKate->setText("Kate ei riitä");
+    objTimer->start(3000);
+
+}
+
+void consoleNosto::removText()
+{
+    ui->textEditKate->clear();
+    objTimer->stop();
+}
+
+void consoleNosto::rahatTulossa()
+{
+    ui->textEditKate->setText("Rahat tulossa, odota...");
+    objTimer->start(3000);
 }
 

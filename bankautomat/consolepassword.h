@@ -51,15 +51,23 @@ private slots:
     void on_btnOK_clicked();
     void updateKorttiLukittu();
     void updateKorttiLukittuSlot(QNetworkReply *replyKorttilukittu);
+    void slotStopTimer();
+    void slotCloseWindow();
+    void slotCloseConsoleMain();
+    void startTimerSlot();
+
 
 private:
     Ui::consolePassword *ui;
     consoleMain *objConMain;
     QNetworkAccessManager *loginManager, *credebManager, *putManager;
     QNetworkReply *reply, *replyLukitseKortti;
+    consoleCreditDebit *objCredeb;
+    QTimer *objTimer, *objTimeri;
+    QNetworkAccessManager *loginManager, *credebManager;
+    QNetworkReply *reply;
     QByteArray response_data;
     QString cardID; //Kortinnumeron välittämistä varten
-    consoleCreditDebit *objCredeb;
     QNetworkAccessManager *asiakastiedotManager;
     QNetworkReply *replyAsiakastiedot;
     QByteArray dataAsiakastiedot;

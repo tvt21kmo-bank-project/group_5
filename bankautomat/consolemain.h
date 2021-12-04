@@ -54,12 +54,19 @@ private slots:
     void creditVastausSlot(QNetworkReply*);
     void pankkiDebitSlot(QNetworkReply*);
     void debitVastausSlot(QNetworkReply*);
+    void timer30Slot();
 
 signals:
     void closeWindow();
     void sendTilitapahtumat(const QString &);
     void finished(QNetworkReply*);
     void sendSaldo(const QString &);
+    void signalIlmoitaKate();
+    void signalRahatTulossa();
+    void sendIdKortti(const QString &);
+    void stopTimer();
+    void startTimer();
+    void closeMainWindow();
 
 private:
     Ui::consoleMain *ui;

@@ -13,11 +13,11 @@ router.get('/:id',
         response.json(dbResult);
       }
     });
-  } 
+  }
 });
 
 
-router.post('/', 
+router.post('/',
 function(request, response) {
   tilitapahtumat.add(request.body, function(err, dbResult) {
     if (err) {
@@ -28,8 +28,20 @@ function(request, response) {
   });
 });
 
+router.post('/list_tilitapahtumat', function(req, res) {
+  tilitapahtumat.tapahtumalista(req.body, function(err,dbResult) {
+      if(err) {
+        res.json(err);
+      } else {
+        console.log(dbResult[0]);
+        res.json(dbResult[0]);
+      //  console.log("Tilitapahtumalista tulostettu");
+      }
+  })
+});
 
-router.delete('/:id', 
+
+router.delete('/:id',
 function(request, response) {
   tilitapahtumat.delete(request.params.id, function(err, dbResult) {
     if (err) {
@@ -41,7 +53,7 @@ function(request, response) {
 });
 
 
-router.put('/:id', 
+router.put('/:id',
 function(request, response) {
   tilitapahtumat.update(request.params.id, request.body, function(err, dbResult) {
     if (err) {

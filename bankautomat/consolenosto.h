@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDebug>
+#include <QTimer>
 #include "consolemuusumma.h"
 
 namespace Ui {
@@ -29,6 +30,9 @@ private slots:
     void timerSlot();
     void receiverMuusumma(double);
     void resetCounter(int);
+    void slotKate();
+    void removText();
+    void rahatTulossa();
 
 signals:
     void closeWindow();
@@ -38,6 +42,7 @@ signals:
 private:
     Ui::consoleNosto *ui;
     consoleMuuSumma *objConMuuSumma;
+    QTimer *objTimer;
     int counter, summa;
 };
 
