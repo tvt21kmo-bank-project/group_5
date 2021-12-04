@@ -155,8 +155,48 @@ void consolePassword::loginSlot(QNetworkReply *reply)
          reply = credebManager->get(request);
      } else {
          qDebug() << "Väärä PIN";
+         ui->lineEditVaaraPIN->setText("Väärä PIN");
+                  ui->lineEditPIN->clear();
+                  counterPIN++;
+                  if(counterPIN == 3){
+                      connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
+                      emit signalLukitseKortti();
+                      ui->lineEditVaaraPIN->clear();
+                      counterPIN = 0;
+                      this->close();
+
+
          objTimeri->stop();
      }
+}
+}
+
+void consolePassword::updateKorttiLukittu()
+{
+    QJsonObject json1;
+    json1.insert("korttilukittu",1);
+    QString site_url1="http://localhost:3000/korttilukittu/"+cardID;
+    QString credentials1="1234:4321";
+    QNetworkRequest request1((site_url1));
+    request1.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray data1 = credentials1.toLocal8Bit().toBase64();
+    QString headerData1 = "Basic " + data1;
+    request1.setRawHeader( "Authorization", headerData1.toLocal8Bit() );
+
+    putManager = new QNetworkAccessManager(this);
+    connect(putManager, SIGNAL(finished (QNetworkReply*)), this, SLOT(updateKorttiLukittuSlot(QNetworkReply*)));
+    replyLukitseKortti = putManager->put(request1, QJsonDocument(json1).toJson());
+
+    qDebug()<<replyLukitseKortti;
+    qDebug()<<QJsonDocument(json1).toJson();
+
+}
+void consolePassword::updateKorttiLukittuSlot(QNetworkReply *replyLukitseKortti)
+{
+    response_dataKorttilukittu=replyLukitseKortti->readAll();
+    //qDebug()<<reply;
+    qDebug()<<response_dataKorttilukittu;
+    //replyLukitseKortti->deleteLater();
 }
 
 void consolePassword::credebSlot(QNetworkReply *reply)
@@ -181,6 +221,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
       }
 }
+
 
 void consolePassword::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
 {

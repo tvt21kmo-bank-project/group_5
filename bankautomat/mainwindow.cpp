@@ -99,7 +99,7 @@ void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
     QJsonObject json;
     QString idkortti = ui->lineEditID->text();
     ui->lineEditID->clear();
-    QString site_url="http://localhost:3000/loginID/"+idkortti;
+    QString site_url="http://localhost:3000/korttilukittu/"+idkortti;
     QString credentials="1234:4321";
     IDcard = idkortti;
     QNetworkRequest request((site_url));
@@ -118,13 +118,21 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
     QByteArray response_data=reply->readAll();
       qDebug() << response_data;
 
-      if(response_data == "true") {
+      if(response_data == "false") {
           qDebug() << "Oikea tunnus ...avaa form";
+          ui->lineEditKortinTila->setText("Oikea tunnus.");
           emit signalLogin(IDcard);
           ui->lineEditID->clear(); //Tyhjennetään ID-kenttä ja avataan PIN-kenttä
           objConPass->show();
       } else {
           qDebug() << "Virheellinen kortti";
+      }
+      else if(response_data == "true") {
+           ui->lineEditKortinTila->setText("Kortti lukittu.");
+
+          }
+      else if(response_data == "Does not exist") {
+          ui->lineEditKortinTila->setText("Korttia ei löydy.");
       }
 }
 
