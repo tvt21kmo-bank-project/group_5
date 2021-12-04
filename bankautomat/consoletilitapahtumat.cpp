@@ -44,7 +44,7 @@ void consoleTilitapahtumat::timerSlot()
 {
     qDebug() << counter;
     counter++;
-    if(counter == 10){
+    if(counter == 30){
         counter = 0;
         emit closeWindow();
     }
@@ -86,6 +86,11 @@ void consoleTilitapahtumat::listTapahtumatSlot(QNetworkReply *reply)
     foreach (const QJsonValue &value, json_array) {
        QJsonObject json_obj = value.toObject();
        tapahtumat+=QString::number(json_obj["summa"].toInt())+"€"+","+json_obj["tapahtuma"].toString()+","+json_obj["date"].toString()+","+json_obj["etunimi_asiakas"].toString()+","+json_obj["sukunimi_asiakas"].toString()+","+"\r";
+       QString omistaja;
+       omistaja = tapahtumat.section(',',3,4); //pilkotaan merkkijonosta omistaja
+       omistaja.replace(QString(","), QString(" ")); //vaihdetaan pilkut välilyönneiksi
+       tapahtumat.replace(QString (","), QString(" "));
+       tapahtumat.remove(omistaja);
        ui->textEditTapahtumat->setText(tapahtumat);
     }
     if (response_data == "[]") {

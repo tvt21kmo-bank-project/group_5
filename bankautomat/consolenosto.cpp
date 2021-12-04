@@ -78,6 +78,7 @@ void consoleNosto::on_btnMuuSumma_clicked()
 
 void consoleNosto::on_btnSulje_clicked()
 {
+   counter = 0;
     this->close();
     emit closeWindow();
     emit removConnect();

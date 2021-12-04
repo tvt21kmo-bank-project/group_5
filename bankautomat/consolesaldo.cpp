@@ -16,6 +16,7 @@ consoleSaldo::~consoleSaldo()
 
 void consoleSaldo::on_btnSulje_clicked()
 {
+    counter = 0;
     this->close();
     emit closeWindow();
 }
