@@ -41,7 +41,6 @@ private slots:
     void on_btnNine_clicked();
     void on_btnReset_clicked();
     void on_btnOK_clicked();
-    void salasananJalkeenLukitus();
 
 private:
     Ui::MainWindow *ui;
