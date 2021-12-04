@@ -29,6 +29,7 @@ signals:
     void finished(QNetworkReply*);
     void sendID(const QString &);
     void sendAsiakastiedot(const QString &);
+    void signalLukitseKortti();
 
 private slots:
 
@@ -48,19 +49,22 @@ private slots:
     void on_btnNine_clicked();
     void on_btnReset_clicked();
     void on_btnOK_clicked();
+    void updateKorttiLukittu();
+    void updateKorttiLukittuSlot(QNetworkReply *replyKorttilukittu);
 
 private:
     Ui::consolePassword *ui;
     consoleMain *objConMain;
-    QNetworkAccessManager *loginManager, *credebManager;
-    QNetworkReply *reply;
+    QNetworkAccessManager *loginManager, *credebManager, *putManager;
+    QNetworkReply *reply, *replyLukitseKortti;
     QByteArray response_data;
     QString cardID; //Kortinnumeron välittämistä varten
     consoleCreditDebit *objCredeb;
     QNetworkAccessManager *asiakastiedotManager;
     QNetworkReply *replyAsiakastiedot;
     QByteArray dataAsiakastiedot;
-    QByteArray response_dataAsiakastiedot;
+    QByteArray response_dataAsiakastiedot, response_dataKorttilukittu;
+    int counterPIN;
 };
 
 #endif // CONSOLEPASSWORD_H
