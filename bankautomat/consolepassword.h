@@ -64,8 +64,6 @@ private:
     QNetworkReply *reply, *replyLukitseKortti;
     consoleCreditDebit *objCredeb;
     QTimer *objTimer, *objTimeri;
-    QNetworkAccessManager *loginManager, *credebManager;
-    QNetworkReply *reply;
     QByteArray response_data;
     QString cardID; //Kortinnumeron välittämistä varten
     QNetworkAccessManager *asiakastiedotManager;

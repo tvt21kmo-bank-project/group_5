@@ -82,6 +82,7 @@ void consoleNosto::on_btnSulje_clicked()
     this->close();
     emit closeWindow();
     emit removConnect();
+    objConMuuSumma->close();
 }
 
 void consoleNosto::timerSlot() // counter ajastin ikkunalle
@@ -92,6 +93,7 @@ void consoleNosto::timerSlot() // counter ajastin ikkunalle
         counter = 0;
         emit closeWindow();
         emit removConnect();
+        objConMuuSumma->close();
     }
 }
 
