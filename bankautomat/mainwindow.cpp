@@ -124,15 +124,12 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
           emit signalLogin(IDcard);
           ui->lineEditID->clear(); //Tyhjennetään ID-kenttä ja avataan PIN-kenttä
           objConPass->show();
+      } else if(response_data == "true") {
+           ui->lineEditKortinTila->setText("Kortti lukittu.");
+      } else if(response_data == "Does not exist") {
+          ui->lineEditKortinTila->setText("Korttia ei löydy.");
       } else {
           qDebug() << "Virheellinen kortti";
-      }
-      else if(response_data == "true") {
-           ui->lineEditKortinTila->setText("Kortti lukittu.");
-
-          }
-      else if(response_data == "Does not exist") {
-          ui->lineEditKortinTila->setText("Korttia ei löydy.");
       }
 }
 

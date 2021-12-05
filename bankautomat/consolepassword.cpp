@@ -211,6 +211,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           disconnect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
           objTimer->start(1000);
           objCredeb->show();
+          counterPIN = 0;
           this->close();
       } else if(response_data == "false") {
           qDebug() << "Ei yhdistelmakorttiominaisuutta";
@@ -218,6 +219,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           emit sendID(cardID); //lähetetään korttinumero seuraavalle formille
           disconnect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
           objConMain->show();
+          counterPIN = 0;
           this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
       }
 }
