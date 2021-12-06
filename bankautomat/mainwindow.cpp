@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
     connect(objConPass, SIGNAL(closeWindow()), this, SLOT(closeConsolePassSlot()));
     connect(objConPass,SIGNAL(stopTimerPass()), this, SLOT(stopTimerSlot()));
-    connect(objTimer, SIGNAL(timeout()), objConPass, SLOT(timerSlot()));
     connect(objConPass, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
+    connect(objTimer, SIGNAL(timeout()), objConPass, SLOT(timerSlot()));
     connect(objTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
 }
 
@@ -157,6 +157,7 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
 
     if(response_data == "3") {
         ui->lineEditKortinTila->setText("Kortti lukittu.");
+        objTimer->stop();
     } else if(response_data == "0" or response_data == "1" or response_data == "2") {
           qDebug() << "Oikea tunnus ...avaa form";
           strCounterPIN = response_data;
@@ -168,13 +169,13 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
           disconnect(this, SIGNAL(signalKortinLukitus(int)), objConPass, SLOT(slotPinLukitus(int)));
           ui->lineEditID->clear(); //Tyhjennetään ID-kenttä ja avataan PIN-kenttä
           objConPass->show();
-    } else if {
-          qDebug() << "Virheellinen kortti";
-          objTimer->stop(); //pysäytetään timeri jos väärä korttinumero
-    } else if(response_data == "Does not exist") {
+    }
+     else if(response_data == "Does not exist") {
           ui->lineEditKortinTila->setText("Korttia ei löydy.");
+          objTimer->stop(); //pysäytetään timeri jos väärä korttinumero
     } else {
         qDebug() << "Virheellinen kortti";
+        objTimer->stop();
     }
 }
 
