@@ -11,6 +11,7 @@ consolePassword::consolePassword(QWidget *parent) :
     credebManager = new QNetworkAccessManager;
     objTimer = new QTimer;
     objTimeri = new QTimer;
+    counterPIN = 0;
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
     connect(objCredeb, SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
@@ -26,8 +27,6 @@ consolePassword::~consolePassword()
     delete ui;
     delete objConMain;
     objConMain = nullptr;
-    delete loginManager;
-    loginManager = nullptr;
     delete objCredeb;
     objCredeb = nullptr;
 }
@@ -153,7 +152,7 @@ void consolePassword::loginSlot(QNetworkReply *reply)
          connect(credebManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(credebSlot(QNetworkReply*)));
          reply = credebManager->get(request);
      } else {
-         qDebug() << "Väärä PIN";
+         qDebug() << "Väärä PIN" << counterPIN;
          ui->lineEditVaaraPIN->setText("Väärä PIN");
                   ui->lineEditPIN->clear();
                   counterPIN++;
