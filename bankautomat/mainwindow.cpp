@@ -9,12 +9,13 @@ MainWindow::MainWindow(QWidget *parent)
     objConPass = new consolePassword;
     objConMain = new consoleMain;
     objTimer = new QTimer;
+    objTekstiTimer = new QTimer;
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
     connect(objConPass, SIGNAL(closeWindow()), this, SLOT(closeConsolePassSlot()));
     connect(objConPass,SIGNAL(stopTimerPass()), this, SLOT(stopTimerSlot()));
     connect(objConPass, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objConPass, SLOT(timerSlot()));
-    connect(objTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
+    connect(objTekstiTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
 }
 
 MainWindow::~MainWindow()
@@ -28,6 +29,10 @@ MainWindow::~MainWindow()
 
     delete objTimer;
     objTimer = nullptr;
+
+    delete objTekstiTimer;
+    objTekstiTimer = nullptr;
+
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -142,12 +147,13 @@ void MainWindow::startTimerSlot()
 void MainWindow::slotTekstiIlmoitus(const QString &arg)
 {
     ui->lineEditKortinTila->setText(arg);
-    objTimer->start(3000);
+    objTekstiTimer->start(3000);
 }
 
 void MainWindow::pyyhiTeksti()
 {
     ui->lineEditKortinTila->clear();
+    objTekstiTimer->stop();
 }
 
 void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n

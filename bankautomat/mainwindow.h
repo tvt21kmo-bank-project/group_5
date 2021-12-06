@@ -60,7 +60,7 @@ private:
     QString IDcard; //välitetään signaalina muille olioille
     QString strCounterPIN;
     int counterPIN;
-    QTimer *objTimer;
+    QTimer *objTimer, *objTekstiTimer;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
