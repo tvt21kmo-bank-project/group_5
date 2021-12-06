@@ -11,10 +11,12 @@ consolePassword::consolePassword(QWidget *parent) :
     credebManager = new QNetworkAccessManager;
     objTimer = new QTimer;
     objTimeri = new QTimer;
+    counter = 0;
+    connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
     counterPIN = 0;
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
-    connect(objCredeb, SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
+    connect(objCredeb, SIGNAL(stopTimercredeb()), this, SLOT(slotStopTimer()));
     connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
     connect(objConMain, SIGNAL(closeMainWindow()), this, SLOT(slotCloseConsoleMain()));
     connect(objConMain,SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
@@ -30,6 +32,10 @@ consolePassword::~consolePassword()
     objConMain = nullptr;
     delete objCredeb;
     objCredeb = nullptr;
+    delete objTimer;
+    objTimer = nullptr;
+    delete objTimeri;
+    objTimeri = nullptr;
 }
 
 void consolePassword::connectingSlot(const QString &IDcard)
@@ -43,66 +49,77 @@ void consolePassword::connectingSlot(const QString &IDcard)
 void consolePassword::on_btnZero_clicked()
 {
     ui->lineEditPIN->insert("0");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnOne_clicked()
 {
     ui->lineEditPIN->insert("1");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnTwo_clicked()
 {
     ui->lineEditPIN->insert("2");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnThree_clicked()
 {
     ui->lineEditPIN->insert("3");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnFour_clicked()
 {
     ui->lineEditPIN->insert("4");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnFive_clicked()
 {
     ui->lineEditPIN->insert("5");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnSix_clicked()
 {
     ui->lineEditPIN->insert("6");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnSeven_clicked()
 {
     ui->lineEditPIN->insert("7");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnEight_clicked()
 {
     ui->lineEditPIN->insert("8");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnNine_clicked()
 {
     ui->lineEditPIN->insert("9");
+    counter = 0;
 }
 
 
 void consolePassword::on_btnReset_clicked()
 {
     ui->lineEditPIN->clear();
+    counter = 0;
 }
 
 
@@ -134,8 +151,11 @@ void consolePassword::on_btnOK_clicked()
     asiakastiedotManager = new QNetworkAccessManager(this);
     connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
     replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
-    objTimeri->start(1000); //conmainin timerin aloitus
-    this->close();
+    counter = 0;
+    objTimeri->start(1000);
+    objTimer->start(1000);
+    this->hide();
+    emit stopTimerPass();
 }
 
 void consolePassword::loginSlot(QNetworkReply *reply)
@@ -152,7 +172,12 @@ void consolePassword::loginSlot(QNetworkReply *reply)
          request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
          connect(credebManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(credebSlot(QNetworkReply*)));
          reply = credebManager->get(request);
+         counter = 0;
+         emit stopTimerPass(); //pysäytetään conpass:n timeri
      } else {
+         qDebug() << "Väärä PIN";
+         objTimeri->stop(); //pysäytetään conmainin timeri jos pin menee väärin
+  
          if(counterPIN == 3){
              emit signalLukitseKortti();
              ui->lineEditVaaraPIN->clear();
@@ -207,21 +232,39 @@ void consolePassword::credebSlot(QNetworkReply *reply)
       qDebug() << response_data;
 
       if(response_data == "true") {
+
           qDebug() << "Credit/Debit ominaisuus";
           connect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
           emit sendID(cardID);
           disconnect(this, SIGNAL(sendID(const QString &)), objCredeb, SLOT(slotCardID(const QString &)));
-          objTimer->start(1000);
+          disconnect(objConMain, SIGNAL(startTimer()), this, SLOT(startTimerSlot()));
+          disconnect(objTimeri, SIGNAL(timeout()), objConMain, SLOT(timer30Slot()));
+          disconnect(objConMain, SIGNAL(closeMainWindow()), this, SLOT(slotCloseConsoleMain()));
+          connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
+          connect(objCredeb, SIGNAL(stopTimercredeb()), this, SLOT(slotStopTimer()));
+          connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
           objCredeb->show();
+          this->hide();
+          emit stopTimerPass();
           counterPIN = 0;
           emit signalLukitseKortti();
           this->close();
+
       } else if(response_data == "false") {
+          disconnect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
+          disconnect(objCredeb, SIGNAL(stopTimercredeb()), this, SLOT(slotStopTimer()));
+          disconnect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
+          connect(objConMain, SIGNAL(closeMainWindow()), this, SLOT(slotCloseConsoleMain()));
+          connect(objConMain,SIGNAL(stopTimer()), this, SLOT(slotStopTimerMain()));
+          connect(objTimeri, SIGNAL(timeout()), objConMain, SLOT(timer30Slot()));
+          connect(objConMain, SIGNAL(startTimer()), this, SLOT(startTimerSlot()));
           qDebug() << "Ei yhdistelmakorttiominaisuutta";
           connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
           emit sendID(cardID); //lähetetään korttinumero seuraavalle formille
           disconnect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
           objConMain->show();
+          this->hide(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
+          emit stopTimerPass();
           counterPIN = 0;
           emit signalLukitseKortti();
           this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
@@ -241,13 +284,14 @@ void consolePassword::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
 
 }
     emit sendAsiakastiedot(asiakastiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
-
+    emit stopTimer();
 }
 
 void consolePassword::slotStopTimer()
 {
     objTimer->stop();
-    objTimeri->stop();
+
+
 }
 
 void consolePassword::slotCloseWindow()
@@ -263,9 +307,33 @@ void consolePassword::startTimerSlot()
 {
     objTimeri->start(1000);
 }
+void consolePassword::timerSlot() // timeri ikkunan sulkemiseen
+{
+    qDebug() << counter;
+    counter++;
+    if(counter == 10){
+        counter = 0;
+        emit closeWindow();
+        emit stopTimerPass();
+    }
+}
+
+
+void consolePassword::slotStopTimerMain()
+{
+     objTimeri->stop();
+}
+void consolePassword::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape) {
+        this->close();
+        emit stopTimerPass();
+        emit stopTimer();
+        counter = 0;
+    }
+}
 
 void consolePassword::slotPinLukitus(int pinArvaukset)
 {
     counterPIN = pinArvaukset;
 }
-

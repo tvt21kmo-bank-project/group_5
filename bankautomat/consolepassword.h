@@ -29,6 +29,10 @@ signals:
     void finished(QNetworkReply*);
     void sendID(const QString &);
     void sendAsiakastiedot(const QString &);
+    void closeWindow();
+    void startTimer();
+    void stopTimer();
+    void stopTimerPass();
     void signalLukitseKortti();
     void sendTeksti(const QString &);
 
@@ -56,6 +60,8 @@ private slots:
     void slotCloseWindow();
     void slotCloseConsoleMain();
     void startTimerSlot();
+    void timerSlot();
+    void slotStopTimerMain();
     void slotPinLukitus(int);
 
 
@@ -71,6 +77,11 @@ private:
     QNetworkAccessManager *asiakastiedotManager;
     QNetworkReply *replyAsiakastiedot;
     QByteArray dataAsiakastiedot;
+    QByteArray response_dataAsiakastiedot;
+    int counter;
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *event) override;
     QByteArray response_dataAsiakastiedot, response_dataKorttilukittu;
     int counterPIN;
 };

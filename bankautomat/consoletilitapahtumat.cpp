@@ -44,7 +44,7 @@ void consoleTilitapahtumat::timerSlot()
 {
     qDebug() << counter;
     counter++;
-    if(counter == 30){
+    if(counter == 10){
         counter = 0;
         emit closeWindow();
     }

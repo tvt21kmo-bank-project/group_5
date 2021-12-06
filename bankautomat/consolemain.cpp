@@ -17,6 +17,7 @@ consoleMain::consoleMain(QWidget *parent) :
     connect(this, SIGNAL(signalIlmoitaKate()), objConNosto, SLOT(slotKate()));
     connect(this, SIGNAL(signalRahatTulossa()), objConNosto, SLOT(rahatTulossa()));
     connect(this, SIGNAL(sendIdKortti(const QString &)), objConTilitapahtumat, SLOT(slotKorttiId(const QString &)));
+
 }
 
 
@@ -45,6 +46,7 @@ void consoleMain::slotCardID(const QString &id) // kortti id ilman yhdistelmäom
 
 void consoleMain::getYhdistelmaIDSlot(const QString &kortti) // yhdistelmäkortin kortti id
 {
+    counter = 0;
     korttiID = kortti;
     qDebug() <<"asiakkaan id korttityyppivalinnasta" << korttiID;
 }
@@ -69,6 +71,8 @@ void consoleMain::on_btnNosto_clicked() //hakee kortin tyypin tietokannasta ja k
     objTimer->start(1000);
     this->hide();
     emit stopTimer();
+    emit stopTimerMain();
+
 }
 
 void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply) // yhdistää korttityypin mukaan proceduuriin
@@ -77,19 +81,33 @@ void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply) // yhdistää k
 
     if(response_data == "credit") {
         qDebug() << " credit, ei yhdistelma";
+        emit stopTimer();
+        emit stopTimerMain();
+
         connect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));    
     } else if(response_data == "debit") {
         qDebug() << "debit, ei yhdistelma";
+        emit stopTimer();
+        emit stopTimerMain();
+
         connect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferDebit(double)));
     } else {
             if(tyyppiValinta == "debit") {
                 qDebug() << "yhdistelma debit";
+                emit stopTimer();
+                emit stopTimerMain();
+
                 connect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferDebit(double)));
             } else if(tyyppiValinta == "credit") {
                qDebug() << "yhdistelma credit";
+               emit stopTimer();
+               emit stopTimerMain();
+
                connect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));
             } else {
                 qDebug() << "Invalid data";
+                emit stopTimer();
+                emit stopTimerMain();
             }
     }
 }
@@ -236,7 +254,9 @@ void consoleMain::slotCloseNosto()
     disconnect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
     objConNosto->close();
     this->show();
+    counter = 0;
     emit startTimer();
+    emit startTimerMain();
 }
 
 void consoleMain::slotCloseTilitapahtumat()
@@ -244,7 +264,9 @@ void consoleMain::slotCloseTilitapahtumat()
     disconnect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     objConTilitapahtumat->close();
     this->show();
+    counter = 0;
     emit startTimer();
+    emit startTimerMain();
 }
 
 void consoleMain::slotCloseSaldo()
@@ -253,7 +275,9 @@ void consoleMain::slotCloseSaldo()
     disconnect(objTimer, SIGNAL(timeout()), objConSaldo, SLOT(timerSlot()));
     objConSaldo->close();
     this->show();
+    counter = 0;
     emit startTimer();
+    emit startTimerMain();
 }
 
 void consoleMain::on_btnTilitapahtumat_clicked()
@@ -273,6 +297,7 @@ void consoleMain::on_btnTilitapahtumat_clicked()
 
     counter = 0;
     emit stopTimer();
+    emit stopTimerMain();
     emit sendIdKortti(korttiID);
     connect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     connect(objConTilitapahtumat, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));
@@ -328,6 +353,7 @@ void consoleMain::getLuottorajaSlot(QNetworkReply*)
 
 void consoleMain::getYhdistelmaSlotSaldo(const QString &saldoYhdistelma )
 {
+    counter = 0;
     saldo = saldoYhdistelma;
     emit sendSaldo(saldo);
 
@@ -335,6 +361,7 @@ void consoleMain::getYhdistelmaSlotSaldo(const QString &saldoYhdistelma )
 
 void consoleMain::getYhdistelmaSlotLuottoraja(const QString &luottorajaYhdistelma)
 {
+    counter = 0;
     saldo = luottorajaYhdistelma;
     emit sendSaldo(saldo);
 }
@@ -355,6 +382,7 @@ void consoleMain::on_btnSaldo_clicked()
 
     counter = 0;
     emit stopTimer();
+    emit stopTimerMain();
     connect(objTimer, SIGNAL(timeout()), objConSaldo, SLOT(timerSlot()));
     connect(objConSaldo, SIGNAL(closeWindow()), this, SLOT(slotCloseSaldo()));
     objTimer->start(1000);
@@ -405,6 +433,7 @@ void consoleMain::getAsiakastiedot(const QString &asiakastiedot) //Vastaanottaa 
 
 void consoleMain::getYhdistelmaSlotAsiakastiedot(const QString &asiakkaantiedot)
 {
+    counter = 0;
     asiakkaanTiedot=asiakkaantiedot;
     ui->lineEditAsiakastiedot->setText(asiakkaanTiedot);
 }
@@ -414,6 +443,7 @@ void consoleMain::on_btnKirjauduUlos_clicked()
     this->close();
     counter = 0;
     emit stopTimer();
+    emit stopTimerMain();
     disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferDebit(double)));
     disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));
 }
@@ -424,6 +454,7 @@ void consoleMain::timer30Slot()
     if(counter == 30){
         counter = 0;
         emit stopTimer();
+        emit stopTimerMain();
         emit closeMainWindow();
-}
+    }
 }

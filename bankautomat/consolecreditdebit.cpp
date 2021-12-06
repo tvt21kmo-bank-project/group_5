@@ -8,8 +8,16 @@ consoleCreditDebit::consoleCreditDebit(QWidget *parent) :
     ui->setupUi(this);
     objConMain = new consoleMain;
     objConSaldo = new consoleSaldo;
+    objTimerit = new QTimer;
     connect(this,SIGNAL(signalID(const QString &)), objConMain,SLOT(getYhdistelmaIDSlot(const QString &)));
     counter = 0;
+
+    connect(objConMain, SIGNAL(startTimerMain()), this, SLOT(startTimerSlot()));
+    connect(objConMain,SIGNAL(stopTimerMain()), this, SLOT(slotStopTimerMain()));
+    connect(objTimerit, SIGNAL(timeout()), objConMain, SLOT(timer30Slot()));
+    connect(objConMain, SIGNAL(closeMainWindow()), this, SLOT(slotCloseConsoleMain()));
+
+
 
 }
 
@@ -18,6 +26,8 @@ consoleCreditDebit::~consoleCreditDebit()
     delete ui;
     delete objConMain;
     objConMain = nullptr;
+    delete objTimerit;
+    objTimerit = nullptr;
 }
 
 void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyyppivalinnan ja pysäyttää ikkunan sulkevan timerin, sekä hakee asiakastiedot
@@ -38,8 +48,10 @@ void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyypp
         valinta = "debit";
         emit signalID(korttiID);
         emit signalValinta(valinta);
-        emit stopTimer();
-        counter = 0;
+        emit stopTimercredeb();
+
+
+
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
@@ -55,7 +67,9 @@ void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyypp
         replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
 
     objConMain->show();
-    this->close();
+    counter = 0;
+    objTimerit->start(1000);
+    this->hide();
 
 }
 
@@ -73,7 +87,7 @@ void consoleCreditDebit::getSaldoSlot(QNetworkReply*) //hakee ja lähettää asi
         }
         connect(this, SIGNAL(sendSaldo(const QString &)), objConMain,SLOT(getYhdistelmaSlotSaldo(const QString &)));
         emit sendSaldo(saldoYhdistelma); //Lähetetään tietokannasta saatu data saldo-ikkunaan.
-       //replysaldo->deleteLater();
+        //replysaldo->deleteLater();
 
 }
 
@@ -94,8 +108,10 @@ void consoleCreditDebit::on_btnCredit_clicked()  //lähettää kortin id:n, tyyp
         valinta = "credit";
         emit signalID(korttiID);
         emit signalValinta(valinta);
-        emit stopTimer();
-        counter = 0;
+        emit stopTimercredeb();
+
+
+
         disconnect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
 
         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+korttiID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
@@ -111,7 +127,9 @@ void consoleCreditDebit::on_btnCredit_clicked()  //lähettää kortin id:n, tyyp
         replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
 
     objConMain->show();
-    this->close();
+    counter = 0;
+    objTimerit->start(1000);
+    this->hide();
 }
 
 void consoleCreditDebit::getLuottorajaSlot(QNetworkReply*) // lähettää luottorajan seuraavaan ikkunaan
@@ -127,6 +145,7 @@ void consoleCreditDebit::getLuottorajaSlot(QNetworkReply*) // lähettää luotto
     }
     connect(this, SIGNAL(sendSaldo(const QString &)), objConMain,SLOT(getYhdistelmaSlotLuottoraja(const QString &)));
     emit sendSaldo(luottorajaYhdistelma);
+
 }
 
 void consoleCreditDebit::slotCardID(const QString &id) // vastaanottaa kortin id:n
@@ -156,8 +175,31 @@ void consoleCreditDebit::timerSlot() // counter ajastin ikkunalle
     counter++;
     if(counter == 10) {
         counter = 0;
-        emit stopTimer();
+        emit stopTimercredeb();
         emit closeWindow();
     }
 }
 
+void consoleCreditDebit::startTimerSlot()
+{
+    objTimerit->start(1000);
+}
+
+void consoleCreditDebit::slotStopTimerMain()
+{
+    objTimerit->stop();
+}
+
+void consoleCreditDebit::slotCloseConsoleMain()
+{
+    objConMain->close();
+}
+void consoleCreditDebit::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape) {
+        objTimerit->stop();
+        emit stopTimer();
+        this->close();
+        counter = 0;
+    }
+}
