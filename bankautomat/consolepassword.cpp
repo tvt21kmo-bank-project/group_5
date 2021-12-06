@@ -17,6 +17,7 @@ consolePassword::consolePassword(QWidget *parent) :
     connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
     connect(objCredeb, SIGNAL(stopTimercredeb()), this, SLOT(slotStopTimer()));
     connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
+    connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
 
 }
 
