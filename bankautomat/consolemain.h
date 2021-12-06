@@ -27,7 +27,6 @@ public:
 
 private slots:
     void getTapahtumatSlot(QNetworkReply*);
-    void getIDSlot(const QString &);//Kortinnumeron vastaanottaja
     void slotCloseNosto();
     void slotCloseSaldo();
     void slotCloseTilitapahtumat();
@@ -79,8 +78,6 @@ private:
     QString korttiID;
     QString tilitapahtumat; //Datan välittämistä varten
     QString saldo;
-    QString IDcard;
-    QString iiteekortti;
     QString tyyppiValinta;
     QNetworkAccessManager *getManager, *pankkiCreditManager, *creditManager;
     QNetworkAccessManager *pankkiDebitManager, *debitManager;

@@ -11,7 +11,7 @@ consolePassword::consolePassword(QWidget *parent) :
     credebManager = new QNetworkAccessManager;
     objTimer = new QTimer;
     objTimeri = new QTimer;
-    connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
+    counterPIN = 0;
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
     connect(objCredeb, SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
@@ -20,6 +20,7 @@ consolePassword::consolePassword(QWidget *parent) :
     connect(objConMain,SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
     connect(objTimeri, SIGNAL(timeout()), objConMain, SLOT(timer30Slot()));
     connect(objConMain, SIGNAL(startTimer()), this, SLOT(startTimerSlot()));
+    connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
 }
 
 consolePassword::~consolePassword()
@@ -27,8 +28,6 @@ consolePassword::~consolePassword()
     delete ui;
     delete objConMain;
     objConMain = nullptr;
-    delete loginManager;
-    loginManager = nullptr;
     delete objCredeb;
     objCredeb = nullptr;
 }
@@ -154,27 +153,27 @@ void consolePassword::loginSlot(QNetworkReply *reply)
          connect(credebManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(credebSlot(QNetworkReply*)));
          reply = credebManager->get(request);
      } else {
-         qDebug() << "Väärä PIN";
-         ui->lineEditVaaraPIN->setText("Väärä PIN");
-                  ui->lineEditPIN->clear();
-                  counterPIN++;
-                  if(counterPIN == 3){
-                      connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
-                      emit signalLukitseKortti();
-                      ui->lineEditVaaraPIN->clear();
-                      counterPIN = 0;
-                      this->close();
-
-
-         objTimeri->stop();
-     }
-}
+         if(counterPIN == 3){
+             emit signalLukitseKortti();
+             ui->lineEditVaaraPIN->clear();
+             counterPIN = 0;
+             this->close();
+             objTimeri->stop();
+         } else {
+                qDebug() << "Väärä PIN";
+                ui->lineEditVaaraPIN->setText("Väärä PIN");
+                emit sendTeksti("Väärä PIN");
+                counterPIN++;
+                emit signalLukitseKortti();
+                qDebug() << "vääriä kertoja" << counterPIN;
+         }
+    }
 }
 
 void consolePassword::updateKorttiLukittu()
 {
     QJsonObject json1;
-    json1.insert("korttilukittu",1);
+    json1.insert("korttilukittu",counterPIN);
     QString site_url1="http://localhost:3000/korttilukittu/"+cardID;
     QString credentials1="1234:4321";
     QNetworkRequest request1((site_url1));
@@ -195,8 +194,11 @@ void consolePassword::updateKorttiLukittuSlot(QNetworkReply *replyLukitseKortti)
 {
     response_dataKorttilukittu=replyLukitseKortti->readAll();
     //qDebug()<<reply;
-    qDebug()<<response_dataKorttilukittu;
-    //replyLukitseKortti->deleteLater();
+    if (counterPIN == 3) {
+        emit sendTeksti("Kortti lukittu!");
+       // qDebug()<<response_dataKorttilukittu;
+        //replyLukitseKortti->deleteLater();
+    }
 }
 
 void consolePassword::credebSlot(QNetworkReply *reply)
@@ -212,6 +214,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           objTimer->start(1000);
           objCredeb->show();
           counterPIN = 0;
+          emit signalLukitseKortti();
           this->close();
       } else if(response_data == "false") {
           qDebug() << "Ei yhdistelmakorttiominaisuutta";
@@ -220,6 +223,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           disconnect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
           objConMain->show();
           counterPIN = 0;
+          emit signalLukitseKortti();
           this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
       }
 }
@@ -258,5 +262,10 @@ void consolePassword::slotCloseConsoleMain()
 void consolePassword::startTimerSlot()
 {
     objTimeri->start(1000);
+}
+
+void consolePassword::slotPinLukitus(int pinArvaukset)
+{
+    counterPIN = pinArvaukset;
 }
 

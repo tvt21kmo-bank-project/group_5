@@ -8,7 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     objConPass = new consolePassword;
     objConMain = new consoleMain;
+    objTimer = new QTimer;
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
+    connect(objConPass, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
+    connect(objTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
 }
 
 MainWindow::~MainWindow()
@@ -113,23 +116,39 @@ void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
     reply = checkCardManager->get(request);
 }
 
+void MainWindow::slotTekstiIlmoitus(const QString &arg)
+{
+    ui->lineEditKortinTila->setText(arg);
+    objTimer->start(3000);
+}
+
+void MainWindow::pyyhiTeksti()
+{
+    ui->lineEditKortinTila->clear();
+}
+
 void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
 {
     QByteArray response_data=reply->readAll();
       qDebug() << response_data;
 
-      if(response_data == "false") {
+    if(response_data == "3") {
+        ui->lineEditKortinTila->setText("Kortti lukittu.");
+    } else if(response_data == "0" or response_data == "1" or response_data == "2") {
           qDebug() << "Oikea tunnus ...avaa form";
+          strCounterPIN = response_data;
+          counterPIN = strCounterPIN.toInt();
+          connect(this, SIGNAL(signalKortinLukitus(int)), objConPass, SLOT(slotPinLukitus(int)));
           ui->lineEditKortinTila->setText("Oikea tunnus.");
           emit signalLogin(IDcard);
+          emit signalKortinLukitus(counterPIN);
+          disconnect(this, SIGNAL(signalKortinLukitus(int)), objConPass, SLOT(slotPinLukitus(int)));
           ui->lineEditID->clear(); //Tyhjennetään ID-kenttä ja avataan PIN-kenttä
           objConPass->show();
-      } else if(response_data == "true") {
-           ui->lineEditKortinTila->setText("Kortti lukittu.");
-      } else if(response_data == "Does not exist") {
+    } else if(response_data == "Does not exist") {
           ui->lineEditKortinTila->setText("Korttia ei löydy.");
-      } else {
-          qDebug() << "Virheellinen kortti";
+    } else {
+        qDebug() << "Virheellinen kortti";
       }
 }
 

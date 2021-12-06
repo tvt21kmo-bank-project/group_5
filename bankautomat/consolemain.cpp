@@ -33,21 +33,17 @@ consoleMain::~consoleMain()
     delete objConTilitapahtumat;
     objConTilitapahtumat = nullptr;
 
-    delete getManager;
-    getManager = nullptr;
-
     delete objConSaldo;
     objConSaldo = nullptr;
 }
 
-void consoleMain::getIDSlot(const QString &cardID)
+void consoleMain::slotCardID(const QString &id) // kortti id ilman yhdistelmäominaisuutta
 {
-    IDcard = cardID;
-    qDebug() << "asiakkaan ID consolemainissa" << IDcard;
-
+    korttiID = id;
+    qDebug() << "kortin id on" << korttiID;
 }
 
-void consoleMain::getYhdistelmaIDSlot(const QString &kortti)
+void consoleMain::getYhdistelmaIDSlot(const QString &kortti) // yhdistelmäkortin kortti id
 {
     korttiID = kortti;
     qDebug() <<"asiakkaan id korttityyppivalinnasta" << korttiID;
@@ -235,12 +231,6 @@ void consoleMain::timerSlot() // timeri ikkunan sulkemiseen
     }
 }
 
-void consoleMain::slotCardID(const QString &id)
-{
-    korttiID = id;
-    qDebug() << korttiID;
-}
-
 void consoleMain::slotCloseNosto()
 {
     disconnect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
@@ -268,7 +258,7 @@ void consoleMain::slotCloseSaldo()
 
 void consoleMain::on_btnTilitapahtumat_clicked()
 {
-    QString site_url="http://localhost:3000/tilitapahtumat/"+IDcard;
+    QString site_url="http://localhost:3000/tilitapahtumat/"+korttiID;
     QString credentials="1234:4321";
     QNetworkRequest request((site_url));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");

@@ -30,6 +30,7 @@ signals:
     void sendID(const QString &);
     void sendAsiakastiedot(const QString &);
     void signalLukitseKortti();
+    void sendTeksti(const QString &);
 
 private slots:
 
@@ -55,6 +56,7 @@ private slots:
     void slotCloseWindow();
     void slotCloseConsoleMain();
     void startTimerSlot();
+    void slotPinLukitus(int);
 
 
 private:

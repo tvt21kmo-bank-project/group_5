@@ -103,7 +103,7 @@ void consoleNosto::receiverMuusumma(double maara) // vastaanottaa ja lähettää
     emit signalSumma(summa);
 }
 
-void consoleNosto::resetCounter(int luku)
+void consoleNosto::resetCounter(int luku)   //muu summa ikkunan signaalin vastaanottaja, nollaa counterin
 {
     counter = luku;
 }
