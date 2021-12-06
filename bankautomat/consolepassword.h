@@ -77,13 +77,14 @@ private:
     QNetworkAccessManager *asiakastiedotManager;
     QNetworkReply *replyAsiakastiedot;
     QByteArray dataAsiakastiedot;
-    QByteArray response_dataAsiakastiedot;
+    QByteArray response_dataAsiakastiedot, response_dataKorttilukittu;
     int counter;
+    int counterPIN;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
-    QByteArray response_dataAsiakastiedot, response_dataKorttilukittu;
-    int counterPIN;
+
+
 };
 
 #endif // CONSOLEPASSWORD_H
