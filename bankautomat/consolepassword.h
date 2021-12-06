@@ -29,6 +29,10 @@ signals:
     void finished(QNetworkReply*);
     void sendID(const QString &);
     void sendAsiakastiedot(const QString &);
+    void closeWindow();
+    void startTimer();
+    void stopTimer();
+    void stopTimerPass();
 
 private slots:
 
@@ -52,6 +56,11 @@ private slots:
     void slotCloseWindow();
     void slotCloseConsoleMain();
     void startTimerSlot();
+    void timerSlot();
+    void slotStopTimerMain();
+
+
+
 
 private:
     Ui::consolePassword *ui;
@@ -66,6 +75,10 @@ private:
     QNetworkReply *replyAsiakastiedot;
     QByteArray dataAsiakastiedot;
     QByteArray response_dataAsiakastiedot;
+    int counter;
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *event) override;
 };
 
 #endif // CONSOLEPASSWORD_H

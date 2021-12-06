@@ -26,6 +26,7 @@ public:
 signals:
     void finished(QNetworkReply*);
     void signalLogin(const QString &);
+    void closeWindow();
 
 private slots:
     void checkCardSlot(QNetworkReply *reply);
@@ -41,6 +42,9 @@ private slots:
     void on_btnNine_clicked();
     void on_btnReset_clicked();
     void on_btnOK_clicked();
+    void closeConsolePassSlot();
+    void stopTimerSlot();
+    void startTimerSlot();
 
 private:
     Ui::MainWindow *ui;
@@ -50,6 +54,7 @@ private:
     QNetworkAccessManager *checkCardManager;
     QByteArray response_data;
     QString IDcard; //välitetään signaalina muille olioille
+    QTimer *objTimer;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

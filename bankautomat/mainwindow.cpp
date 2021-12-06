@@ -8,7 +8,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     objConPass = new consolePassword;
     objConMain = new consoleMain;
+    objTimer = new QTimer;
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
+    connect(objConPass, SIGNAL(closeWindow()), this, SLOT(closeConsolePassSlot()));
+    connect(objConPass,SIGNAL(stopTimerPass()), this, SLOT(stopTimerSlot()));
+    connect(objTimer, SIGNAL(timeout()), objConPass, SLOT(timerSlot()));
 }
 
 MainWindow::~MainWindow()
@@ -19,12 +23,16 @@ MainWindow::~MainWindow()
 
     delete objConMain;
     objConMain = nullptr;
+
+    delete objTimer;
+    objTimer = nullptr;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Escape) {
         this->close();
+        objTimer->stop();
     }
 }
 
@@ -111,6 +119,22 @@ void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
     checkCardManager = new QNetworkAccessManager(this);
     connect(checkCardManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkCardSlot(QNetworkReply*)));
     reply = checkCardManager->get(request);
+    objTimer->start(1000); //password kentän timerin aloitus
+}
+
+void MainWindow::closeConsolePassSlot()
+{
+    objConPass->close();
+}
+
+void MainWindow::stopTimerSlot()
+{
+    objTimer->stop();
+}
+
+void MainWindow::startTimerSlot()
+{
+    objTimer->start(1000);
 }
 
 void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
@@ -125,6 +149,7 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
           objConPass->show();
       } else {
           qDebug() << "Virheellinen kortti";
+          objTimer->stop(); //pysäytetään timeri jos väärä korttinumero
       }
 }
 

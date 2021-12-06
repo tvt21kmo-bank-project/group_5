@@ -56,6 +56,8 @@ private slots:
     void debitVastausSlot(QNetworkReply*);
     void timer30Slot();
 
+
+
 signals:
     void closeWindow();
     void sendTilitapahtumat(const QString &);
@@ -67,6 +69,8 @@ signals:
     void stopTimer();
     void startTimer();
     void closeMainWindow();
+    void startTimerMain();
+    void stopTimerMain();
 
 private:
     Ui::consoleMain *ui;
