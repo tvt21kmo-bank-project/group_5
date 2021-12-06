@@ -33,9 +33,6 @@ consoleMain::~consoleMain()
     delete objConTilitapahtumat;
     objConTilitapahtumat = nullptr;
 
-    delete getManager;
-    getManager = nullptr;
-
     delete objConSaldo;
     objConSaldo = nullptr;
 }

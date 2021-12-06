@@ -27,7 +27,6 @@ public:
 
 private slots:
     void getTapahtumatSlot(QNetworkReply*);
-    void getIDSlot(const QString &);//Kortinnumeron vastaanottaja
     void slotCloseNosto();
     void slotCloseSaldo();
     void slotCloseTilitapahtumat();

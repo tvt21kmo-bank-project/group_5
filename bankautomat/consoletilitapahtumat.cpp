@@ -79,7 +79,6 @@ void consoleTilitapahtumat::listTapahtumatSlot(QNetworkReply *reply)
 {
 
     response_data=reply->readAll();
-    qDebug() << response_data;
     QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
     QJsonArray json_array = json_doc.array();
     QString tapahtumat;
@@ -96,7 +95,6 @@ void consoleTilitapahtumat::listTapahtumatSlot(QNetworkReply *reply)
     if (response_data == "[]") {
         listarajaus -= 10;
     }
-    qDebug() << tapahtumat;
     qDebug() << "listan rajaus" << listarajaus;
     disconnect(postManager, SIGNAL(finished (QNetworkReply*)), this, SLOT(listTapahtumatSlot(QNetworkReply*)));
 }
