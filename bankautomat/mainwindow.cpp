@@ -10,9 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
     objConMain = new consoleMain;
     objTimer = new QTimer;
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
-    connect(objConPass, SIGNAL(closeWindow()), this, SLOT(closeConsolePassSlot()));
-    connect(objConPass,SIGNAL(stopTimerPass()), this, SLOT(stopTimerSlot()));
-    connect(objTimer, SIGNAL(timeout()), objConPass, SLOT(timerSlot()));
     connect(objConPass, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
     connect(objTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
 }
@@ -25,16 +22,12 @@ MainWindow::~MainWindow()
 
     delete objConMain;
     objConMain = nullptr;
-
-    delete objTimer;
-    objTimer = nullptr;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Escape) {
         this->close();
-        objTimer->stop();
     }
 }
 
@@ -121,22 +114,6 @@ void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
     checkCardManager = new QNetworkAccessManager(this);
     connect(checkCardManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkCardSlot(QNetworkReply*)));
     reply = checkCardManager->get(request);
-    objTimer->start(1000); //password kentän timerin aloitus
-}
-
-void MainWindow::closeConsolePassSlot()
-{
-    objConPass->close();
-}
-
-void MainWindow::stopTimerSlot()
-{
-    objTimer->stop();
-}
-
-void MainWindow::startTimerSlot()
-{
-    objTimer->start(1000);
 }
 
 void MainWindow::slotTekstiIlmoitus(const QString &arg)
@@ -168,14 +145,11 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
           disconnect(this, SIGNAL(signalKortinLukitus(int)), objConPass, SLOT(slotPinLukitus(int)));
           ui->lineEditID->clear(); //Tyhjennetään ID-kenttä ja avataan PIN-kenttä
           objConPass->show();
-    } else if {
-          qDebug() << "Virheellinen kortti";
-          objTimer->stop(); //pysäytetään timeri jos väärä korttinumero
     } else if(response_data == "Does not exist") {
           ui->lineEditKortinTila->setText("Korttia ei löydy.");
     } else {
         qDebug() << "Virheellinen kortti";
-    }
+      }
 }
 
 

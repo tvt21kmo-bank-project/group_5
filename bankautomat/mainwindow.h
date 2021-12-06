@@ -27,7 +27,6 @@ public:
 signals:
     void finished(QNetworkReply*);
     void signalLogin(const QString &);
-    void closeWindow();
     void signalKortinLukitus(int);
 
 private slots:
@@ -44,9 +43,6 @@ private slots:
     void on_btnNine_clicked();
     void on_btnReset_clicked();
     void on_btnOK_clicked();
-    void closeConsolePassSlot();
-    void stopTimerSlot();
-    void startTimerSlot();
     void slotTekstiIlmoitus(const QString &);
     void pyyhiTeksti();
 
