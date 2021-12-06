@@ -7,6 +7,8 @@ consoleMuuSumma::consoleMuuSumma(QWidget *parent) :
 {
     ui->setupUi(this);
     counter = 0;
+    objTimer = new QTimer;
+    connect(objTimer, SIGNAL(timeout()), this, SLOT(clearText()));
 }
 
 consoleMuuSumma::~consoleMuuSumma()
@@ -97,24 +99,34 @@ void consoleMuuSumma::on_btnOK_clicked() //tarkistaa luvun vastaavan setelirahaa
     emit signalReset(counter);
     strluku = ui->lineEditMaara->text();
     konsoliLuku = strluku.toInt();
-    testi50 = konsoliLuku % 50;
-    testi20 = konsoliLuku % 20;
-
-    if(testi50 == 0 || testi20 == 0) {
-        maara = strluku.toDouble();
-        emit signalSumma(maara);
-        ui->lineEditMaara->clear();
-        ui->textEditIlmoitus->clear();
-        this->close();
+    if(konsoliLuku == 0) {
+        objTimer->start(3000);
+        ui->textEditIlmoitus->setText("Näppäile jokin summa!");
     } else {
-        ui->textEditIlmoitus->setText("Ei sopivia seteleitä!");
+        testi50 = konsoliLuku % 50;
+        testi20 = konsoliLuku % 20;
+
+        if(testi50 == 0 || testi20 == 0) {
+            maara = strluku.toDouble();
+            emit signalSumma(maara);
+            ui->lineEditMaara->clear();
+            ui->textEditIlmoitus->clear();
+            this->close();
+        } else {
+            objTimer->start(3000);
+            ui->textEditIlmoitus->setText("Ei sopivia seteleitä!");
+        }
     }
 }
-
-
 void consoleMuuSumma::on_btnSulje_clicked()
 {
     emit signalReset(counter);
     this->close();
+}
+
+void consoleMuuSumma::clearText()
+{
+    objTimer->stop();
+    ui->textEditIlmoitus->clear();
 }
 

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDebug>
+#include <QTimer>
 
 namespace Ui {
 class consoleMuuSumma;
@@ -30,6 +31,7 @@ private slots:
     void on_btnReset_clicked();
     void on_btnOK_clicked();
     void on_btnSulje_clicked();
+    void clearText();
 
 signals:
     void signalReset(int);
@@ -37,6 +39,7 @@ signals:
 private:
     Ui::consoleMuuSumma *ui;
     QString strluku;
+    QTimer *objTimer;
     int counter, konsoliLuku, testi50, testi20;
     double maara;
 };

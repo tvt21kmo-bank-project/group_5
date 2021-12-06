@@ -37,6 +37,7 @@ var asiakastiedotRouter = require('./routes/asiakastiedot');
 var korttityyppiRouter = require('./routes/korttityyppi');
 var luottorajaRouter = require('./routes/luottoraja');
 var pankkiRouter = require('./routes/pankki');
+var korttiLukittuRouter = require('./routes/korttilukittu');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -58,5 +59,6 @@ app.use('/asiakastiedot', asiakastiedotRouter);
 app.use('/korttityyppi', korttityyppiRouter);
 app.use('/luottoraja', luottorajaRouter);
 app.use('/pankki', pankkiRouter);
+app.use('/korttilukittu', korttiLukittuRouter);
 
 module.exports = app;

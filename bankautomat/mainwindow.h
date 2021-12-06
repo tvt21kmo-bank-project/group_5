@@ -9,6 +9,7 @@
 #include <QNetworkAccessManager>
 #include <QJsonDocument>
 #include <QDebug>
+#include <QTimer>
 
 
 QT_BEGIN_NAMESPACE
@@ -27,6 +28,7 @@ signals:
     void finished(QNetworkReply*);
     void signalLogin(const QString &);
     void closeWindow();
+    void signalKortinLukitus(int);
 
 private slots:
     void checkCardSlot(QNetworkReply *reply);
@@ -45,6 +47,8 @@ private slots:
     void closeConsolePassSlot();
     void stopTimerSlot();
     void startTimerSlot();
+    void slotTekstiIlmoitus(const QString &);
+    void pyyhiTeksti();
 
 private:
     Ui::MainWindow *ui;
@@ -54,6 +58,8 @@ private:
     QNetworkAccessManager *checkCardManager;
     QByteArray response_data;
     QString IDcard; //välitetään signaalina muille olioille
+    QString strCounterPIN;
+    int counterPIN;
     QTimer *objTimer;
 
 protected:

@@ -194,7 +194,7 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>50</y>
+      <y>60</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -214,6 +214,16 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLineEdit" name="lineEditKortinTila">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>10</y>
+      <width>251</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -221,7 +231,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
