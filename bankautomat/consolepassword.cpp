@@ -153,19 +153,20 @@ void consolePassword::loginSlot(QNetworkReply *reply)
          connect(credebManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(credebSlot(QNetworkReply*)));
          reply = credebManager->get(request);
      } else {
-         qDebug() << "Väärä PIN";
-         ui->lineEditVaaraPIN->setText("Väärä PIN");
-                  ui->lineEditPIN->clear();
-                  counterPIN++;
-                  emit signalLukitseKortti();
-                  qDebug() << "vääriä kertoja" << counterPIN;
-                    if(counterPIN == 3){
-                        emit signalLukitseKortti();
-                        ui->lineEditVaaraPIN->clear();
-                        counterPIN = 0;
-                        this->close();
-                        objTimeri->stop();
-                    }
+         if(counterPIN == 3){
+             emit signalLukitseKortti();
+             ui->lineEditVaaraPIN->clear();
+             counterPIN = 0;
+             this->close();
+             objTimeri->stop();
+         } else {
+                qDebug() << "Väärä PIN";
+                ui->lineEditVaaraPIN->setText("Väärä PIN");
+                emit sendTeksti("Väärä PIN");
+                counterPIN++;
+                emit signalLukitseKortti();
+                qDebug() << "vääriä kertoja" << counterPIN;
+         }
     }
 }
 
@@ -194,7 +195,8 @@ void consolePassword::updateKorttiLukittuSlot(QNetworkReply *replyLukitseKortti)
     response_dataKorttilukittu=replyLukitseKortti->readAll();
     //qDebug()<<reply;
     if (counterPIN == 3) {
-        qDebug()<<response_dataKorttilukittu;
+        emit sendTeksti("Kortti lukittu!");
+       // qDebug()<<response_dataKorttilukittu;
         //replyLukitseKortti->deleteLater();
     }
 }

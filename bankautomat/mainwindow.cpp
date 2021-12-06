@@ -8,7 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     objConPass = new consolePassword;
     objConMain = new consoleMain;
+    objTimer = new QTimer;
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
+    connect(objConPass, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
+    connect(objTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
 }
 
 MainWindow::~MainWindow()
@@ -111,6 +114,17 @@ void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
     checkCardManager = new QNetworkAccessManager(this);
     connect(checkCardManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkCardSlot(QNetworkReply*)));
     reply = checkCardManager->get(request);
+}
+
+void MainWindow::slotTekstiIlmoitus(const QString &arg)
+{
+    ui->lineEditKortinTila->setText(arg);
+    objTimer->start(3000);
+}
+
+void MainWindow::pyyhiTeksti()
+{
+    ui->lineEditKortinTila->clear();
 }
 
 void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n

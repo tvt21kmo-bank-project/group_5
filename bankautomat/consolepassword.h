@@ -30,6 +30,7 @@ signals:
     void sendID(const QString &);
     void sendAsiakastiedot(const QString &);
     void signalLukitseKortti();
+    void sendTeksti(const QString &);
 
 private slots:
 
