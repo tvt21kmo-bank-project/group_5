@@ -55,6 +55,7 @@ private slots:
     void slotCloseWindow();
     void slotCloseConsoleMain();
     void startTimerSlot();
+    void slotPinLukitus(int);
 
 
 private:

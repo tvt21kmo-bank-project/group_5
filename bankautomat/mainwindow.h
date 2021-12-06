@@ -26,6 +26,7 @@ public:
 signals:
     void finished(QNetworkReply*);
     void signalLogin(const QString &);
+    void signalKortinLukitus(int);
 
 private slots:
     void checkCardSlot(QNetworkReply *reply);
@@ -50,6 +51,8 @@ private:
     QNetworkAccessManager *checkCardManager;
     QByteArray response_data;
     QString IDcard; //välitetään signaalina muille olioille
+    QString strCounterPIN;
+    int counterPIN;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

@@ -11,12 +11,18 @@ router.get('/:idkortti',
         console.log("Tapahtui virhe!");
       } else {
         let tila = dbResult[0].korttilukittu
-        if(tila === 1) {
-          res.send(true);
-        } else if(tila === 0) {
-          res.send(false);
-        } else{
-            res.send("korjaa koodi")
+        if(tila === 3) {
+          res.send('3');
+        } else {
+            if(tila === 2) {
+              res.send('2');
+            } else if(tila === 1) {
+              res.send('1');
+            } else if(tila === 0) {
+              res.send('0');
+            } else {
+              res.send("Does not exist")
+            }
         }
 
       }
