@@ -11,7 +11,7 @@ consolePassword::consolePassword(QWidget *parent) :
     credebManager = new QNetworkAccessManager;
     objTimer = new QTimer;
     objTimeri = new QTimer;
-    connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
+   // connect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(getIDSlot(const QString &))); // välitetään consolemainiin signaalin avulla kortin numero.
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
     connect(objCredeb, SIGNAL(stopTimer()), this, SLOT(slotStopTimer()));
@@ -158,17 +158,15 @@ void consolePassword::loginSlot(QNetworkReply *reply)
          ui->lineEditVaaraPIN->setText("Väärä PIN");
                   ui->lineEditPIN->clear();
                   counterPIN++;
-                  if(counterPIN == 3){
-                      connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
-                      emit signalLukitseKortti();
-                      ui->lineEditVaaraPIN->clear();
-                      counterPIN = 0;
-                      this->close();
-
-
-         objTimeri->stop();
-     }
-}
+                    if(counterPIN == 3){
+                        connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
+                        emit signalLukitseKortti();
+                        ui->lineEditVaaraPIN->clear();
+                        counterPIN = 0;
+                        this->close();
+                        objTimeri->stop();
+                    }
+    }
 }
 
 void consolePassword::updateKorttiLukittu()
