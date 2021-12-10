@@ -27,6 +27,7 @@ public:
 signals:
     void finished(QNetworkReply*);
     void signalLogin(const QString &);
+    void signalTeksti(const QString &);
     void closeWindow();
     void signalKortinLukitus(int);
 
