@@ -102,11 +102,12 @@ void consoleMuuSumma::on_btnOK_clicked() //tarkistaa luvun vastaavan setelirahaa
     if(konsoliLuku == 0) {
         objTimer->start(3000);
         ui->textEditIlmoitus->setText("Näppäile jokin summa!");
+    } else if(konsoliLuku == 10 or konsoliLuku == 30) {
+        objTimer->start(3000);
+        ui->textEditIlmoitus->setText("Ei sopivia seteleitä");
     } else {
-        testi50 = konsoliLuku % 50;
-        testi20 = konsoliLuku % 20;
-
-        if(testi50 == 0 || testi20 == 0) {
+        testi10 = konsoliLuku % 10;
+        if(testi10 == 0) {
             maara = strluku.toDouble();
             emit signalSumma(maara);
             ui->lineEditMaara->clear();

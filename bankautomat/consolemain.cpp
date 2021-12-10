@@ -173,7 +173,6 @@ void consoleMain::conRemov()
 {
      disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferDebit(double)));
      disconnect(objConNosto, SIGNAL(signalSumma(double)), this, SLOT(transferCredit(double)));
-     qDebug() << "disc toimii!";
 }
 
 void consoleMain::transferDebit(double summa) // hakee tiedot pankkisiirto debitin mukaan
