@@ -44,7 +44,7 @@ void consolePassword::connectingSlot(const QString &IDcard)
 {
     ui->lineEditPIN->clear();
     cardID = IDcard;
-    qDebug() << "asiakkaan ID paaswordissä" << cardID;
+    qDebug() << "asiakkaan ID passwordissa" << cardID;
 
 }
 

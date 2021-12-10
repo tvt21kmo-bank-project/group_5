@@ -40,9 +40,7 @@ private slots:
     void getAsiakastiedot(const QString &);
     void getKorttityyppiSlot(QNetworkReply*);
     void getLuottorajaSlot(QNetworkReply*);
-    void getYhdistelmaSlotSaldo(const QString &);
     void getYhdistelmaIDSlot(const QString &);
-    void getYhdistelmaSlotLuottoraja(const QString &);
     void getKorttityyppiNostoSlot(QNetworkReply*);
     void slotTyyppiValinta(const QString &);
     void getYhdistelmaSlotAsiakastiedot(const QString &);
