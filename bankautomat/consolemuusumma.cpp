@@ -122,6 +122,7 @@ void consoleMuuSumma::on_btnOK_clicked() //tarkistaa luvun vastaavan setelirahaa
 void consoleMuuSumma::on_btnSulje_clicked()
 {
     emit signalReset(counter);
+    ui->lineEditMaara->clear();
     this->close();
 }
 
