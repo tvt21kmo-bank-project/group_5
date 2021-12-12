@@ -81,8 +81,8 @@ private:
     QString tilitapahtumat; //Datan välittämistä varten
     QString saldo;
     QString tyyppiValinta;
-    QNetworkAccessManager *getManager, *pankkiCreditManager, *creditManager;
-    QNetworkAccessManager *pankkiDebitManager, *debitManager;
+    QNetworkAccessManager *getManager, *pankkiCreditManager, *creditManager, *getManager1;
+    QNetworkAccessManager *pankkiDebitManager, *debitManager, *tiliTapahtumatManager;
     QNetworkAccessManager *korttityyppiManager;
     QNetworkReply *replyKorttityyppi, *replyData, *creditReply, *debitReply;
     QNetworkReply *replytapahtumat;

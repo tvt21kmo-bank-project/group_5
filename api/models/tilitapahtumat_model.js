@@ -2,7 +2,7 @@ const db = require('../database.js');
 
 const tilitapahtumat = {
   getTapahtumat: function(id, callback) {
-      return db.query('select etunimi_asiakas, sukunimi_asiakas, summa, tapahtuma, date, idomistaja, idtili from tilitapahtumat left join tili on tilitapahtumat.tili_idTili=tili.idtili left join kortti on tili.idtili=kortti.tili_idtili left join asiakas on kortti.asiakas_idasiakas=asiakas.idasiakas where kortti.idkortti=? limit 10', [id], callback);
+      return db.query('select etunimi_asiakas, sukunimi_asiakas, summa, tapahtuma, date, idomistaja, idtili from tilitapahtumat left join tili on tilitapahtumat.tili_idTili=tili.idtili left join kortti on tili.idtili=kortti.tili_idtili left join asiakas on kortti.asiakas_idasiakas=asiakas.idasiakas where kortti.idkortti=? order by date desc limit 10;', [id], callback);
     },
     add: function(tilitapahtumat, callback) {
       return db.query(

@@ -10,6 +10,7 @@ consoleMain::consoleMain(QWidget *parent) :
     objConNosto= new consoleNosto;
     objConTilitapahtumat = new consoleTilitapahtumat;
     objConSaldo = new consoleSaldo;
+
     counter = 0;
     connect(this, SIGNAL(sendTilitapahtumat(const QString &)), objConTilitapahtumat, SLOT(getDataSlot(const QString &)));
     connect(this, SIGNAL(sendSaldo(const QString &)), objConSaldo,SLOT(getSaldo(const QString &)));
@@ -36,6 +37,34 @@ consoleMain::~consoleMain()
 
     delete objConSaldo;
     objConSaldo = nullptr;
+
+    delete korttityyppiManager;
+    korttityyppiManager = nullptr;
+
+    delete pankkiCreditManager;
+    pankkiCreditManager = nullptr;
+
+    delete creditManager;
+    creditManager = nullptr;
+
+    delete pankkiDebitManager;
+    pankkiDebitManager = nullptr;
+
+    delete getManager;
+    getManager = nullptr;
+
+    delete korttityyppiManager;
+    korttityyppiManager = nullptr;
+
+    delete tiliTapahtumatManager;
+    tiliTapahtumatManager = nullptr;
+
+    delete debitManager;
+    debitManager = nullptr;
+
+    delete getManager1;
+    getManager1 = nullptr;
+
 }
 
 void consoleMain::slotCardID(const QString &id) // kortti id ilman yhdistelmäominaisuutta
@@ -53,6 +82,8 @@ void consoleMain::getYhdistelmaIDSlot(const QString &kortti) // yhdistelmäkorti
 
 void consoleMain::on_btnNosto_clicked() //hakee kortin tyypin tietokannasta ja käynnistää timerin ja avaa nosto ikkunan
 {
+
+
     QString site_urlKorttityyppi="http://localhost:3000/korttityyppi/"+korttiID;
     QString credentialsKorttityyppi="1234:4321";
     QNetworkRequest requestKorttityyppi((site_urlKorttityyppi)); requestKorttityyppi.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -69,7 +100,7 @@ void consoleMain::on_btnNosto_clicked() //hakee kortin tyypin tietokannasta ja k
     connect(objTimer, SIGNAL(timeout()), objConNosto, SLOT(timerSlot()));
     connect(objConNosto, SIGNAL(closeWindow()), this, SLOT(slotCloseNosto()));
     objTimer->start(1000);
-    this->hide();
+    this->close();
     emit stopTimer();
     emit stopTimerMain();
 
@@ -110,10 +141,12 @@ void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply) // yhdistää k
                 emit stopTimerMain();
             }
     }
+
 }
 
 void consoleMain::transferCredit(double summa) // hakee tiedot pankkisiirto creditin mukaan
 {
+
     siirtosumma = summa;
     qDebug() << "credit " << siirtosumma;
 
@@ -167,6 +200,7 @@ void consoleMain::creditVastausSlot(QNetworkReply *creditReply) // ilmoittaa onk
         emit signalIlmoitaKate();
         qDebug() << "Siirto epaonnistui";
     }
+
 }
 
 void consoleMain::conRemov()
@@ -190,10 +224,12 @@ void consoleMain::transferDebit(double summa) // hakee tiedot pankkisiirto debit
     pankkiDebitManager = new QNetworkAccessManager(this);
     connect(pankkiDebitManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(pankkiDebitSlot(QNetworkReply*)));
     replyData = pankkiDebitManager->get(request);
+
 }
 
 void consoleMain::pankkiDebitSlot(QNetworkReply*) // sijoittaa haettuun olioon valitun määrän ja lähettää proceduuriin
 {
+
     response_data=replyData->readAll();
     QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
     QJsonArray json_array = json_doc.array();
@@ -215,6 +251,7 @@ void consoleMain::pankkiDebitSlot(QNetworkReply*) // sijoittaa haettuun olioon v
     connect(debitManager, SIGNAL(finished(QNetworkReply*)),
     this, SLOT(debitVastausSlot(QNetworkReply*)));
     debitReply = debitManager->post(request, QJsonDocument(objJson).toJson());
+
 }
 
 void consoleMain::debitVastausSlot(QNetworkReply *debitReply) // ilmoittaa onko siirto onnistunut
@@ -228,6 +265,7 @@ void consoleMain::debitVastausSlot(QNetworkReply *debitReply) // ilmoittaa onko 
         emit signalIlmoitaKate();
         qDebug() << "Siirto epaonnistui";
     }
+
 }
 
 void consoleMain::slotTyyppiValinta(const QString &valinta)
@@ -281,6 +319,7 @@ void consoleMain::slotCloseSaldo()
 
 void consoleMain::on_btnTilitapahtumat_clicked()
 {
+
     QString site_url="http://localhost:3000/tilitapahtumat/"+korttiID;
     QString credentials="1234:4321";
     QNetworkRequest request((site_url));
@@ -289,9 +328,9 @@ void consoleMain::on_btnTilitapahtumat_clicked()
     QString headerData = "Basic " + data;
     request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
 
-    getManager = new QNetworkAccessManager(this);
-    connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getTapahtumatSlot(QNetworkReply*)));
-    replytapahtumat = getManager->get(request);
+    tiliTapahtumatManager = new QNetworkAccessManager(this);
+    connect(tiliTapahtumatManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getTapahtumatSlot(QNetworkReply*)));
+    replytapahtumat = tiliTapahtumatManager->get(request);
     objConTilitapahtumat->show();
 
     counter = 0;
@@ -301,7 +340,7 @@ void consoleMain::on_btnTilitapahtumat_clicked()
     connect(objTimer, SIGNAL(timeout()), objConTilitapahtumat, SLOT(timerSlot()));
     connect(objConTilitapahtumat, SIGNAL(closeWindow()), this, SLOT(slotCloseTilitapahtumat()));
     objTimer->start(1000);
-    this->hide();
+    this->close();
 }
 
 void consoleMain::getTapahtumatSlot(QNetworkReply*)
@@ -313,11 +352,11 @@ void consoleMain::getTapahtumatSlot(QNetworkReply*)
     foreach (const QJsonValue &value, json_array) {
        QJsonObject json_obj = value.toObject();
        tilitapahtumat+=QString::number(json_obj["summa"].toInt())+"€"+","+json_obj["tapahtuma"].toString()+","+json_obj["date"].toString()+","+json_obj["etunimi_asiakas"].toString()+","+json_obj["sukunimi_asiakas"].toString()+","+"\r";
-       //Qstring tyyppinen olio datan esittämistä varten tilitapahtumissa
+
+      //Qstring tyyppinen olio datan esittämistä varten tilitapahtumissa
     }
     qDebug() << "Tilitapahtumat: "<< tilitapahtumat;
     emit sendTilitapahtumat(tilitapahtumat); //lähetetään data tilitapahtumille.
-    replytapahtumat->deleteLater();
 }
 
 void consoleMain::getSaldoSlot(QNetworkReply*)
@@ -346,10 +385,10 @@ void consoleMain::getLuottorajaSlot(QNetworkReply*)
 
     }
     emit sendSaldo(saldo); //Lähetetään tietokannasta saatu data saldo-ikkunaan.
-}
 
 void consoleMain::on_btnSaldo_clicked()
 {
+
     QString site_urlKorttityyppi="http://localhost:3000/korttityyppi/"+korttiID;
     QString credentialsKorttityyppi="1234:4321";
     QNetworkRequest requestKorttityyppi((site_urlKorttityyppi)); requestKorttityyppi.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -368,7 +407,8 @@ void consoleMain::on_btnSaldo_clicked()
     connect(objTimer, SIGNAL(timeout()), objConSaldo, SLOT(timerSlot()));
     connect(objConSaldo, SIGNAL(closeWindow()), this, SLOT(slotCloseSaldo()));
     objTimer->start(1000);
-    this->hide();
+    this->close();
+
 }
 
 void consoleMain::getKorttityyppiSlot(QNetworkReply *replyKorttityyppi)
@@ -384,13 +424,14 @@ void consoleMain::getKorttityyppiSlot(QNetworkReply *replyKorttityyppi)
             QByteArray data = credentials.toLocal8Bit().toBase64();
             QString headerData = "Basic " + data;
             request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
-
             getManager = new QNetworkAccessManager(this);
             connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getSaldoSlot(QNetworkReply*)));
             replysaldo = getManager->get(request);
 
+
     }
     else if (response_dataKorttityyppi == "credit") {
+
         QString site_url="http://localhost:3000/luottoraja/"+korttiID; //Haetaan asiakkaan luottoraja tietokannasta kortin id:n perusteella.
             QString credentials="1234:4321";
             QNetworkRequest request((site_url));
@@ -399,9 +440,10 @@ void consoleMain::getKorttityyppiSlot(QNetworkReply *replyKorttityyppi)
             QString headerData = "Basic " + data;
             request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
 
-            getManager = new QNetworkAccessManager(this);
-            connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getLuottorajaSlot(QNetworkReply*)));
-            replysaldo = getManager->get(request);
+            getManager1 = new QNetworkAccessManager(this);
+            connect(getManager1, SIGNAL(finished(QNetworkReply*)), this, SLOT(getLuottorajaSlot(QNetworkReply*)));
+            replysaldo = getManager1->get(request);
+
 
     }
     else if (response_dataKorttityyppi == "yhdistelma" && tyyppiValinta == "credit") {
