@@ -385,7 +385,7 @@ void consoleMain::getLuottorajaSlot(QNetworkReply*)
 
     }
     emit sendSaldo(saldo); //Lähetetään tietokannasta saatu data saldo-ikkunaan.
-
+}
 void consoleMain::on_btnSaldo_clicked()
 {
 
