@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(objConPass, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objConPass, SLOT(timerSlot()));
     connect(objTekstiTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
+    connect(this, SIGNAL(signalTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
 }
 
 MainWindow::~MainWindow()
@@ -167,14 +168,14 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
       qDebug() << response_data;
 
     if(response_data == "3") {
-        ui->lineEditKortinTila->setText("Kortti lukittu.");
+        emit signalTeksti("Kortti lukittu!");
         objTimer->stop();
     } else if(response_data == "0" or response_data == "1" or response_data == "2") {
           qDebug() << "Oikea tunnus ...avaa form";
           strCounterPIN = response_data;
           counterPIN = strCounterPIN.toInt();
           connect(this, SIGNAL(signalKortinLukitus(int)), objConPass, SLOT(slotPinLukitus(int)));
-          ui->lineEditKortinTila->setText("Oikea tunnus.");
+          emit signalTeksti("Oikea tunnus.");
           emit signalLogin(IDcard);
           emit signalKortinLukitus(counterPIN);
           disconnect(this, SIGNAL(signalKortinLukitus(int)), objConPass, SLOT(slotPinLukitus(int)));
@@ -182,10 +183,10 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
           objConPass->show();
     }
      else if(response_data == "Does not exist") {
-          ui->lineEditKortinTila->setText("Korttia ei löydy.");
+          emit signalTeksti("Korttia ei löydy.");
           objTimer->stop(); //pysäytetään timeri jos väärä korttinumero
     } else {
-        qDebug() << "Virheellinen kortti";
+        emit signalTeksti("Aseta kortti");
         objTimer->stop();
     }
 }

@@ -50,7 +50,7 @@ void consolePassword::connectingSlot(const QString &IDcard)
 {
     ui->lineEditPIN->clear();
     cardID = IDcard;
-    qDebug() << "asiakkaan ID paaswordissä" << cardID;
+    qDebug() << "asiakkaan ID passwordissa" << cardID;
 
 }
 
@@ -180,13 +180,11 @@ void consolePassword::loginSlot(QNetworkReply *reply)
          counter = 0;
          emit stopTimerPass(); //pysäytetään conpass:n timeri
      } else {
-         qDebug() << "Väärä PIN";
          emit stopTimerPass();
          objTimeri->stop(); //pysäytetään conmainin timeri jos pin menee väärin
   
          if(counterPIN == 3){
              emit signalLukitseKortti();
-             ui->lineEditVaaraPIN->clear();
              counterPIN = 0;
              this->close();
              objTimeri->stop();
@@ -195,7 +193,6 @@ void consolePassword::loginSlot(QNetworkReply *reply)
              emit stopTimerPass();
          } else {
                 qDebug() << "Väärä PIN";
-                ui->lineEditVaaraPIN->setText("Väärä PIN");
                 emit sendTeksti("Väärä PIN");
                 counterPIN++;
                 emit signalLukitseKortti();

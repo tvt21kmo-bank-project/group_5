@@ -40,7 +40,7 @@ private:
     Ui::consoleMuuSumma *ui;
     QString strluku;
     QTimer *objTimer;
-    int counter, konsoliLuku, testi50, testi20;
+    int counter, konsoliLuku, testi10;
     double maara;
 };
 

@@ -35,8 +35,6 @@ private slots:
     void on_btnDebit_clicked();
     void on_btnCredit_clicked();
     void slotCardID(const QString &);
-    void getSaldoSlot(QNetworkReply *);
-    void getLuottorajaSlot(QNetworkReply *);
     void getAsiakastiedotSlot(QNetworkReply *);
     void timerSlot();
     void startTimerSlot();
