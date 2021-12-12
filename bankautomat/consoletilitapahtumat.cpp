@@ -13,6 +13,9 @@ consoleTilitapahtumat::consoleTilitapahtumat(QWidget *parent) :
 consoleTilitapahtumat::~consoleTilitapahtumat()
 {
     delete ui;
+
+    delete postManager;
+    postManager = nullptr;
 }
 
 void consoleTilitapahtumat::getDataSlot(const QString &tilitapahtumat)

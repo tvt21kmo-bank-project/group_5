@@ -38,6 +38,12 @@ consolePassword::~consolePassword()
     objTimer = nullptr;
     delete objTimeri;
     objTimeri = nullptr;
+    delete loginManager;
+    loginManager = nullptr;
+    delete putManager;
+    putManager = nullptr;
+    delete asiakastiedotManager;
+    asiakastiedotManager = nullptr;
 }
 
 void consolePassword::connectingSlot(const QString &IDcard)
@@ -152,8 +158,10 @@ void consolePassword::on_btnOK_clicked()
     counter = 0;
     objTimeri->start(1000);
     objTimer->start(1000);
-    this->hide();
+
     emit stopTimerPass();
+    this->close();
+
 }
 
 void consolePassword::loginSlot(QNetworkReply *reply)
@@ -246,7 +254,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           connect(objCredeb, SIGNAL(stopTimercredeb()), this, SLOT(slotStopTimer()));
           connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
           objCredeb->show();
-          this->hide();
+          this->close();
           emit stopTimerPass();
           counterPIN = 0;
           emit signalLukitseKortti();
@@ -268,7 +276,7 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           emit sendID(cardID); //lähetetään korttinumero seuraavalle formille
           disconnect(this, SIGNAL(sendID(const QString &)), objConMain, SLOT(slotCardID(const QString &)));
           objConMain->show();
-          this->hide(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
+          this->close(); //suljetaan PIN-kenttä onnistuneen kirjauksen jälkeen
           emit stopTimerPass();
           counterPIN = 0;
           emit signalLukitseKortti();

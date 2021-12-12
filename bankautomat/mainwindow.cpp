@@ -33,6 +33,9 @@ MainWindow::~MainWindow()
     delete objTekstiTimer;
     objTekstiTimer = nullptr;
 
+    delete checkCardManager;
+    checkCardManager = nullptr;
+
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -111,6 +114,7 @@ void MainWindow::on_btnReset_clicked()
 
 void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
 {
+
     QJsonObject json;
     QString idkortti = ui->lineEditID->text();
     ui->lineEditID->clear();
@@ -127,6 +131,7 @@ void MainWindow::on_btnOK_clicked() // hakee tietokannasta kortin id:n
     connect(checkCardManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(checkCardSlot(QNetworkReply*)));
     reply = checkCardManager->get(request);
     objTimer->start(1000); //password kentän timerin aloitus
+
 }
 
 void MainWindow::closeConsolePassSlot()

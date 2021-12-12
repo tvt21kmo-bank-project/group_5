@@ -19,6 +19,9 @@ consoleNosto::~consoleNosto()
     delete ui;
     delete objConMuuSumma;
     objConMuuSumma = nullptr;
+
+    delete objTimer;
+    objTimer = nullptr;
 }
 
 void consoleNosto::on_btn20e_clicked()

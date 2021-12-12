@@ -10,7 +10,7 @@ left join tili on tilitapahtumat.tili_idTili=tili.idtili
 left join kortti on tili.idtili=kortti.tili_idtili 
 left join asiakas on kortti.asiakas_idasiakas=asiakas.idasiakas 
 where kortti.idkortti = id
-limit alkuraja, 10;
+order by date desc limit alkuraja, 10;
 END$$
 
 DELIMITER ;

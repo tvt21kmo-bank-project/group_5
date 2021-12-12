@@ -25,7 +25,7 @@ public:
     ~consolePassword();
 
 signals:
-    void signalKirjaudu();
+    //void signalKirjaudu();
     void finished(QNetworkReply*);
     void sendID(const QString &);
     void sendAsiakastiedot(const QString &);

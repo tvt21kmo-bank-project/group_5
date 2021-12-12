@@ -28,6 +28,14 @@ consoleCreditDebit::~consoleCreditDebit()
     objConMain = nullptr;
     delete objTimerit;
     objTimerit = nullptr;
+    delete objConSaldo;
+    objConSaldo = nullptr;
+    delete getManager;
+    getManager = nullptr;
+    delete asiakastiedotManager;
+    asiakastiedotManager = nullptr;
+    delete getManager1;
+    getManager1 = nullptr;
 }
 
 void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyyppivalinnan ja pysäyttää ikkunan sulkevan timerin, sekä hakee asiakastiedot
