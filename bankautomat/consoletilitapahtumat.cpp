@@ -21,7 +21,7 @@ consoleTilitapahtumat::~consoleTilitapahtumat()
 void consoleTilitapahtumat::getDataSlot(const QString &tilitapahtumat)
 {
     tapahtumat = tilitapahtumat; //Käytössä koko oliossa
-    qDebug()<<"Asiakkaan tilitapahtumat" << tapahtumat;
+    //qDebug()<<"Asiakkaan tilitapahtumat" << tapahtumat;
     QString omistaja;
     omistaja = tapahtumat.section(',',3,4); //pilkotaan merkkijonosta omistaja
     omistaja.replace(QString(","), QString(" ")); //vaihdetaan pilkut välilyönneiksi

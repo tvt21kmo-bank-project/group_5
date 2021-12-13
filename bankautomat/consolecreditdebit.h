@@ -46,9 +46,9 @@ private:
     Ui::consoleCreditDebit *ui;
     QString korttiID, valinta;
     consoleMain *objConMain;
-    QNetworkAccessManager *getManager, *getManager1, *asiakastiedotManager;
-    QNetworkReply *replysaldo, *replyLuottoraja, *replyAsiakastiedot;
-    QByteArray response_data, response_data1, response_dataAsiakastiedot;
+    QNetworkAccessManager *asiakastiedotManager;
+    QNetworkReply *replyAsiakastiedot;
+    QByteArray response_dataAsiakastiedot;
     consoleSaldo *objConSaldo;
     int counter;
     QTimer *objTimerit;

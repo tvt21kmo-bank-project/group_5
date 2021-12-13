@@ -37,34 +37,6 @@ consoleMain::~consoleMain()
 
     delete objConSaldo;
     objConSaldo = nullptr;
-
-    delete korttityyppiManager;
-    korttityyppiManager = nullptr;
-
-    delete pankkiCreditManager;
-    pankkiCreditManager = nullptr;
-
-    delete creditManager;
-    creditManager = nullptr;
-
-    delete pankkiDebitManager;
-    pankkiDebitManager = nullptr;
-
-    delete getManager;
-    getManager = nullptr;
-
-    delete korttityyppiManager;
-    korttityyppiManager = nullptr;
-
-    delete tiliTapahtumatManager;
-    tiliTapahtumatManager = nullptr;
-
-    delete debitManager;
-    debitManager = nullptr;
-
-    delete getManager1;
-    getManager1 = nullptr;
-
 }
 
 void consoleMain::slotCardID(const QString &id) // kortti id ilman yhdistelmäominaisuutta
@@ -141,7 +113,8 @@ void consoleMain::getKorttityyppiNostoSlot(QNetworkReply *reply) // yhdistää k
                 emit stopTimerMain();
             }
     }
-
+    korttityyppiManager->deleteLater();
+    replyKorttityyppi->deleteLater();
 }
 
 void consoleMain::transferCredit(double summa) // hakee tiedot pankkisiirto creditin mukaan
@@ -175,6 +148,7 @@ void consoleMain::pankkiCreditSlot(QNetworkReply*) // sijoittaa haettuun olioon 
        objJson.insert("maara",siirtosumma);
        qDebug() << objJson;
     }
+    replyData->deleteLater();
 
     QString site_url="http://localhost:3000/pankki/transfer_credit";
     QString credentials="1234:4321";
@@ -200,6 +174,8 @@ void consoleMain::creditVastausSlot(QNetworkReply *creditReply) // ilmoittaa onk
         emit signalIlmoitaKate();
         qDebug() << "Siirto epaonnistui";
     }
+    pankkiCreditManager->deleteLater();
+    creditManager->deleteLater();
 
 }
 
@@ -239,6 +215,7 @@ void consoleMain::pankkiDebitSlot(QNetworkReply*) // sijoittaa haettuun olioon v
        objJson.insert("maara",siirtosumma);
        qDebug() << objJson;
     }
+    replyData->deleteLater();
 
     QString site_url="http://localhost:3000/pankki/transfer_debit";
     QString credentials="1234:4321";
@@ -251,7 +228,6 @@ void consoleMain::pankkiDebitSlot(QNetworkReply*) // sijoittaa haettuun olioon v
     connect(debitManager, SIGNAL(finished(QNetworkReply*)),
     this, SLOT(debitVastausSlot(QNetworkReply*)));
     debitReply = debitManager->post(request, QJsonDocument(objJson).toJson());
-
 }
 
 void consoleMain::debitVastausSlot(QNetworkReply *debitReply) // ilmoittaa onko siirto onnistunut
@@ -265,7 +241,8 @@ void consoleMain::debitVastausSlot(QNetworkReply *debitReply) // ilmoittaa onko 
         emit signalIlmoitaKate();
         qDebug() << "Siirto epaonnistui";
     }
-
+    pankkiDebitManager->deleteLater();
+    debitManager->deleteLater();
 }
 
 void consoleMain::slotTyyppiValinta(const QString &valinta)
@@ -355,7 +332,7 @@ void consoleMain::getTapahtumatSlot(QNetworkReply*)
 
       //Qstring tyyppinen olio datan esittämistä varten tilitapahtumissa
     }
-    qDebug() << "Tilitapahtumat: "<< tilitapahtumat;
+    //qDebug() << "Tilitapahtumat: "<< tilitapahtumat;
     emit sendTilitapahtumat(tilitapahtumat); //lähetetään data tilitapahtumille.
 }
 
