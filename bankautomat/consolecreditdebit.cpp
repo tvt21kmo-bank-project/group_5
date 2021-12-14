@@ -13,7 +13,7 @@ consoleCreditDebit::consoleCreditDebit(QWidget *parent) :
     counter = 0;
 
     connect(objConMain, SIGNAL(startTimerMain()), this, SLOT(startTimerSlot()));
-    connect(objConMain,SIGNAL(stopTimerMain()), this, SLOT(slotStopTimerMain()));
+    connect(objConMain, SIGNAL(stopTimerMain()), this, SLOT(slotStopTimerMain()));
     connect(objTimerit, SIGNAL(timeout()), objConMain, SLOT(timer30Slot()));
     connect(objConMain, SIGNAL(closeMainWindow()), this, SLOT(slotCloseConsoleMain()));
 
@@ -30,12 +30,6 @@ consoleCreditDebit::~consoleCreditDebit()
     objTimerit = nullptr;
     delete objConSaldo;
     objConSaldo = nullptr;
-    delete getManager;
-    getManager = nullptr;
-    delete asiakastiedotManager;
-    asiakastiedotManager = nullptr;
-    delete getManager1;
-    getManager1 = nullptr;
 }
 
 void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyyppivalinnan ja pysäyttää ikkunan sulkevan timerin, sekä hakee asiakastiedot
@@ -52,7 +46,6 @@ void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyypp
     asiakastiedotManager = new QNetworkAccessManager(this);
     connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
     replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
-    getManager = new QNetworkAccessManager(this);
     connect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
     valinta = "debit";
     emit signalID(korttiID);
@@ -64,7 +57,6 @@ void consoleCreditDebit::on_btnDebit_clicked()  //lähettää kortin id:n, tyypp
     counter = 0;
     objTimerit->start(1000);
     this->hide();
-
 }
 
 void consoleCreditDebit::on_btnCredit_clicked()  //lähettää kortin id:n, tyyppivalinnan ja pysäyttää ikkunan sulkevan timerin, sekä hakee asiakastiedot
@@ -80,7 +72,6 @@ void consoleCreditDebit::on_btnCredit_clicked()  //lähettää kortin id:n, tyyp
     asiakastiedotManager = new QNetworkAccessManager(this);
     connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
     replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
-    getManager1 = new QNetworkAccessManager(this);
     connect(this,SIGNAL(signalValinta(const QString &)),objConMain,SLOT(slotTyyppiValinta(const QString &)));
     valinta = "credit";
     emit signalID(korttiID);
@@ -112,6 +103,9 @@ void consoleCreditDebit::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain,SLOT(getYhdistelmaSlotAsiakastiedot(const QString &)));
 }
     emit sendAsiakastiedot(asiakkaantiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
+
+    replyAsiakastiedot->deleteLater();
+    asiakastiedotManager->deleteLater();
 
 }
 

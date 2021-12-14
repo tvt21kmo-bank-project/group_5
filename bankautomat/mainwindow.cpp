@@ -34,9 +34,6 @@ MainWindow::~MainWindow()
     delete objTekstiTimer;
     objTekstiTimer = nullptr;
 
-    delete checkCardManager;
-    checkCardManager = nullptr;
-
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -189,6 +186,8 @@ void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
         emit signalTeksti("Aseta kortti");
         objTimer->stop();
     }
+    reply->deleteLater();
+    checkCardManager->deleteLater();
 }
 
 
