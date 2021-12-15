@@ -36,6 +36,8 @@ signals:
     void signalLukitseKortti();
     void sendTeksti(const QString &);
 
+
+
 private slots:
 
     void connectingSlot(const QString &);
@@ -68,7 +70,7 @@ private slots:
 private:
     Ui::consolePassword *ui;
     consoleMain *objConMain;
-    QNetworkAccessManager *loginManager, *credebManager, *putManager;
+    QNetworkAccessManager *loginManager, *putManager, *credebManager;
     QNetworkReply *reply, *replyLukitseKortti;
     consoleCreditDebit *objCredeb;
     QTimer *objTimer, *objTimeri;

@@ -10,21 +10,19 @@ consolePassword::consolePassword(QWidget *parent) :
     counterPIN = 0;
     objConMain = new consoleMain;
     objCredeb = new consoleCreditDebit;
-    credebManager = new QNetworkAccessManager;
+
     objTimer = new QTimer;
     objTimeri = new QTimer;
-    loginManager = new QNetworkAccessManager(this);
-    putManager = new QNetworkAccessManager(this);
-    asiakastiedotManager = new QNetworkAccessManager(this);
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
     connect(objCredeb, SIGNAL(stopTimercredeb()), this, SLOT(slotStopTimer()));
     connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
     connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
-    connect(credebManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(credebSlot(QNetworkReply*)));
-    connect(loginManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
-    connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
-    connect(putManager, SIGNAL(finished (QNetworkReply*)), this, SLOT(updateKorttiLukittuSlot(QNetworkReply*)));
+
+
+
+
+
 }
 
 consolePassword::~consolePassword()
@@ -38,12 +36,7 @@ consolePassword::~consolePassword()
     objTimer = nullptr;
     delete objTimeri;
     objTimeri = nullptr;
-    delete loginManager;
-    loginManager = nullptr;
-    delete putManager;
-    putManager = nullptr;
-    delete asiakastiedotManager;
-    asiakastiedotManager = nullptr;
+
 }
 
 void consolePassword::connectingSlot(const QString &IDcard)
@@ -144,23 +137,11 @@ void consolePassword::on_btnOK_clicked()
     QByteArray data = credentials.toLocal8Bit().toBase64();
     QString headerData = "Basic " + data;
     request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+    loginManager = new QNetworkAccessManager(this);
     reply = loginManager->post(request, QJsonDocument(json).toJson());
+    connect(loginManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
 
-    QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+cardID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
-    QString credentialsAsiakastiedot="1234:4321";
-    QNetworkRequest requestAsiakastiedot((site_urlAsiakastiedot));
-    requestAsiakastiedot.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    QByteArray dataAsiakastiedot = credentialsAsiakastiedot.toLocal8Bit().toBase64();
-    QString headerDataAsiakastiedot = "Basic " + dataAsiakastiedot;
-    requestAsiakastiedot.setRawHeader( "Authorization", headerDataAsiakastiedot.toLocal8Bit() );
 
-    replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
-    counter = 0;
-    objTimeri->start(1000);
-    objTimer->start(1000);
-
-    emit stopTimerPass();
-    this->close();
 
 }
 
@@ -168,19 +149,26 @@ void consolePassword::loginSlot(QNetworkReply *reply)
 {
     QByteArray response_data=reply->readAll();
      if (response_data == "true") {
-         QJsonObject json;
-         QString site_url="http://localhost:3000/creditdebit/"+cardID;
-         QString credentials="1234:4321";
-         QNetworkRequest request((site_url));
-         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-         QByteArray data = credentials.toLocal8Bit().toBase64();
-         QString headerData = "Basic " + data;
-         request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
-         reply = credebManager->get(request);
+
+         QString site_urlAsiakastiedot="http://localhost:3000/asiakastiedot/"+cardID; //Haetaan tietokannasta asiakastiedot kortin ID:n perusteella.
+         QString credentialsAsiakastiedot="1234:4321";
+         QNetworkRequest requestAsiakastiedot((site_urlAsiakastiedot));
+         requestAsiakastiedot.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+         QByteArray dataAsiakastiedot = credentialsAsiakastiedot.toLocal8Bit().toBase64();
+         QString headerDataAsiakastiedot = "Basic " + dataAsiakastiedot;
+         requestAsiakastiedot.setRawHeader( "Authorization", headerDataAsiakastiedot.toLocal8Bit() );
+         asiakastiedotManager = new QNetworkAccessManager(this);
+         connect(asiakastiedotManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getAsiakastiedotSlot(QNetworkReply*)));
+         replyAsiakastiedot = asiakastiedotManager->get(requestAsiakastiedot);
          counter = 0;
-         emit stopTimerPass(); //pysäytetään conpass:n timeri
+         objTimeri->start(1000);
+         objTimer->start(1000);
+          emit stopTimerPass(); //pysäytetään conpass:n timeri
+            this->close();
+
+
      } else {
-         emit stopTimerPass();
+
          objTimeri->stop(); //pysäytetään conmainin timeri jos pin menee väärin
   
          if(counterPIN == 3){
@@ -197,12 +185,15 @@ void consolePassword::loginSlot(QNetworkReply *reply)
                 counterPIN++;
                 emit signalLukitseKortti();
                 qDebug() << "vääriä kertoja" << counterPIN;
-                emit stopTimerPass();
+
                 objTimeri->stop();
                 objTimer->stop();
                 counter = 0;
          }
     }
+
+loginManager->deleteLater();
+reply->deleteLater();
 }
 
 void consolePassword::updateKorttiLukittu()
@@ -216,8 +207,9 @@ void consolePassword::updateKorttiLukittu()
     QByteArray data1 = credentials1.toLocal8Bit().toBase64();
     QString headerData1 = "Basic " + data1;
     request1.setRawHeader( "Authorization", headerData1.toLocal8Bit() );
-
+    putManager = new QNetworkAccessManager(this);
     replyLukitseKortti = putManager->put(request1, QJsonDocument(json1).toJson());
+    connect(putManager, SIGNAL(finished (QNetworkReply*)), this, SLOT(updateKorttiLukittuSlot(QNetworkReply*)));
 }
 void consolePassword::updateKorttiLukittuSlot(QNetworkReply *replyLukitseKortti)
 {
@@ -228,10 +220,13 @@ void consolePassword::updateKorttiLukittuSlot(QNetworkReply *replyLukitseKortti)
         emit stopTimerPass();
         emit sendTeksti("Kortti lukittu!");
     }
+    replyLukitseKortti->deleteLater();
+    putManager->deleteLater();
 }
 
 void consolePassword::credebSlot(QNetworkReply *reply)
 {
+
     QByteArray response_data=reply->readAll();
       qDebug() << response_data;
 
@@ -279,6 +274,9 @@ void consolePassword::credebSlot(QNetworkReply *reply)
           emit signalLukitseKortti();
 
       }
+reply->deleteLater();
+credebManager->deleteLater();
+
 }
 
 
@@ -295,6 +293,20 @@ void consolePassword::getAsiakastiedotSlot(QNetworkReply *replyAsiakastiedot)
 }
     emit sendAsiakastiedot(asiakastiedot); //Lähetetään asiakastiedot consoleMainiin, jossa ne tulostuvat tekstikenttään.
     emit stopTimer();
+            QJsonObject json;
+             QString site_url="http://localhost:3000/creditdebit/"+cardID;
+             QString credentials="1234:4321";
+             QNetworkRequest request((site_url));
+             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+             QByteArray data = credentials.toLocal8Bit().toBase64();
+             QString headerData = "Basic " + data;
+             request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
+             credebManager = new QNetworkAccessManager;
+             reply = credebManager->get(request);
+            connect(credebManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(credebSlot(QNetworkReply*)));
+
+    replyAsiakastiedot->deleteLater();
+    asiakastiedotManager->deleteLater();
 }
 
 void consolePassword::slotStopTimer()

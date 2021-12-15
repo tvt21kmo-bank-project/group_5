@@ -334,6 +334,9 @@ void consoleMain::getTapahtumatSlot(QNetworkReply*)
     }
     //qDebug() << "Tilitapahtumat: "<< tilitapahtumat;
     emit sendTilitapahtumat(tilitapahtumat); //lähetetään data tilitapahtumille.
+
+    replytapahtumat->deleteLater();
+    tiliTapahtumatManager->deleteLater();
 }
 
 void consoleMain::getSaldoSlot(QNetworkReply*)
@@ -348,6 +351,8 @@ void consoleMain::getSaldoSlot(QNetworkReply*)
 
     }
     emit sendSaldo(saldo); //Lähetetään tietokannasta saatu data saldo-ikkunaan.
+    replysaldo->deleteLater();
+    getManager->deleteLater();
 }
 
 void consoleMain::getLuottorajaSlot(QNetworkReply*)
@@ -362,6 +367,8 @@ void consoleMain::getLuottorajaSlot(QNetworkReply*)
 
     }
     emit sendSaldo(saldo); //Lähetetään tietokannasta saatu data saldo-ikkunaan.
+    replysaldo->deleteLater();
+    getManager->deleteLater();
 }
 void consoleMain::on_btnSaldo_clicked()
 {
@@ -417,9 +424,9 @@ void consoleMain::getKorttityyppiSlot(QNetworkReply *replyKorttityyppi)
             QString headerData = "Basic " + data;
             request.setRawHeader( "Authorization", headerData.toLocal8Bit() );
 
-            getManager1 = new QNetworkAccessManager(this);
-            connect(getManager1, SIGNAL(finished(QNetworkReply*)), this, SLOT(getLuottorajaSlot(QNetworkReply*)));
-            replysaldo = getManager1->get(request);
+            getManager = new QNetworkAccessManager(this);
+            connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getLuottorajaSlot(QNetworkReply*)));
+            replysaldo = getManager->get(request);
 
 
     }
@@ -449,6 +456,8 @@ void consoleMain::getKorttityyppiSlot(QNetworkReply *replyKorttityyppi)
             connect(getManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getSaldoSlot(QNetworkReply*)));
             replysaldo = getManager->get(request);
         }
+    replyKorttityyppi->deleteLater();
+    korttityyppiManager->deleteLater();
 }
 
 void consoleMain::getAsiakastiedot(const QString &asiakastiedot) //Vastaanottaa consolePasswordista tulevan tiedon ja näyttää sen tekstikentässä.
