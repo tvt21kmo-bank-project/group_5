@@ -14,9 +14,7 @@ consoleTilitapahtumat::~consoleTilitapahtumat()
 {
     delete ui;
 
-    delete postManager;
-    postManager = nullptr;
-}
+   }
 
 void consoleTilitapahtumat::getDataSlot(const QString &tilitapahtumat)
 {
@@ -100,7 +98,11 @@ void consoleTilitapahtumat::listTapahtumatSlot(QNetworkReply *reply)
     }
     qDebug() << "listan rajaus" << listarajaus;
     disconnect(postManager, SIGNAL(finished (QNetworkReply*)), this, SLOT(listTapahtumatSlot(QNetworkReply*)));
+
+    reply->deleteLater();
+    postManager->deleteLater();
 }
+
 
 
 void consoleTilitapahtumat::on_btnNext10_clicked()
