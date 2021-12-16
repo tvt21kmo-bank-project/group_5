@@ -25,7 +25,6 @@ public:
     ~consolePassword();
 
 signals:
-    //void signalKirjaudu();
     void finished(QNetworkReply*);
     void sendID(const QString &);
     void sendAsiakastiedot(const QString &);
@@ -65,6 +64,8 @@ private slots:
     void timerSlot();
     void slotStopTimerMain();
     void slotPinLukitus(int);
+    void slotIlmoitus(const QString &);
+    void pyyhiTeksti();
 
 
 private:
@@ -73,7 +74,7 @@ private:
     QNetworkAccessManager *loginManager, *putManager, *credebManager;
     QNetworkReply *reply, *replyLukitseKortti;
     consoleCreditDebit *objCredeb;
-    QTimer *objTimer, *objTimeri;
+    QTimer *objTimer, *objTimeri, *objTekstiTimer;
     QByteArray response_data;
     QString cardID; //Kortinnumeron välittämistä varten
     QNetworkAccessManager *asiakastiedotManager;

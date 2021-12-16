@@ -13,13 +13,14 @@ consolePassword::consolePassword(QWidget *parent) :
 
     objTimer = new QTimer;
     objTimeri = new QTimer;
+    objTekstiTimer = new QTimer;
     connect(this,SIGNAL(sendAsiakastiedot(const QString &)), objConMain, SLOT(getAsiakastiedot(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objCredeb, SLOT(timerSlot()));
     connect(objCredeb, SIGNAL(stopTimercredeb()), this, SLOT(slotStopTimer()));
     connect(objCredeb, SIGNAL(closeWindow()), this, SLOT(slotCloseWindow()));
     connect(this, SIGNAL(signalLukitseKortti()), this,SLOT(updateKorttiLukittu()));
-
-
+    connect(this, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotIlmoitus(const QString &)));
+    connect(objTekstiTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
 
 
 
@@ -36,6 +37,8 @@ consolePassword::~consolePassword()
     objTimer = nullptr;
     delete objTimeri;
     objTimeri = nullptr;
+    delete objTekstiTimer;
+    objTekstiTimer = nullptr;
 
 }
 
@@ -358,4 +361,16 @@ void consolePassword::keyPressEvent(QKeyEvent *event)
 void consolePassword::slotPinLukitus(int pinArvaukset)
 {
     counterPIN = pinArvaukset;
+}
+
+void consolePassword::slotIlmoitus(const QString &arg)
+{
+    ui->lineEditIlmoitus->setText(arg);
+    objTekstiTimer->start(3000);
+}
+
+void consolePassword::pyyhiTeksti()
+{
+    ui->lineEditIlmoitus->clear();
+    objTekstiTimer->stop();
 }

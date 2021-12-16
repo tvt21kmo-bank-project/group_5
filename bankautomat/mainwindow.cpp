@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(signalLogin(const QString &)), objConPass, SLOT(connectingSlot(const QString &)));
     connect(objConPass, SIGNAL(closeWindow()), this, SLOT(closeConsolePassSlot()));
     connect(objConPass,SIGNAL(stopTimerPass()), this, SLOT(stopTimerSlot()));
-    connect(objConPass, SIGNAL(sendTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
     connect(objTimer, SIGNAL(timeout()), objConPass, SLOT(timerSlot()));
     connect(objTekstiTimer, SIGNAL(timeout()), this, SLOT(pyyhiTeksti()));
     connect(this, SIGNAL(signalTeksti(const QString &)), this, SLOT(slotTekstiIlmoitus(const QString &)));
@@ -162,7 +161,6 @@ void MainWindow::pyyhiTeksti()
 void MainWindow::checkCardSlot(QNetworkReply *reply)   //tarkistaa kortin id:n
 {
     QByteArray response_data=reply->readAll();
-      qDebug() << response_data;
 
     if(response_data == "3") {
         emit signalTeksti("Kortti lukittu!");
